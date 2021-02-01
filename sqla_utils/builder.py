@@ -3,14 +3,12 @@ from __future__ import annotations
 import re
 from os import PathLike
 from pathlib import Path
-from typing import Any, Iterable, Protocol
+from typing import Any, Callable, Iterable
 
 from .split_sql import split_sql
 
 
-class SQLExecutor(Protocol):
-    def execute(self, __query: str) -> Any:
-        ...
+SQLExecutor = Callable[[str], Any]
 
 
 class DependencyLoopError(Exception):
@@ -44,8 +42,8 @@ class DatabaseBuilder:
     >>>
     """
 
-    def __init__(self, engine: SQLExecutor, path: PathLike | str) -> None:
-        self._executor = engine
+    def __init__(self, executor: SQLExecutor, path: PathLike | str) -> None:
+        self._executor = executor
         self._path = Path(path)
         self._parsed: set[str] = set()
         self._parsing: list[str] = []
@@ -93,8 +91,8 @@ def _parse_sql_headers(stream: Iterable[str]) -> dict[str, str]:
     return {m.group(1).lower(): m.group(2).strip() for m in matches}
 
 
-def _execute_sql_stream(engine: SQLExecutor, stream: Iterable[str]) -> None:
+def _execute_sql_stream(executor: SQLExecutor, stream: Iterable[str]) -> None:
     """Run the SQL statements in a stream against a database."""
     for query in split_sql(stream):
         query = query.replace("%", "%%")
-        engine.execute(query)
+        executor(query)
