@@ -3,7 +3,7 @@ from __future__ import annotations
 from types import TracebackType
 from typing import Any, Iterable, Mapping, TypeVar, overload
 
-from sqlalchemy.engine import Connection, Transaction as SATransaction
+from sqlalchemy.engine import Connection
 from sqlalchemy.orm import Query, Session
 from sqlalchemy.schema import Table
 from sqlalchemy.sql import ColumnElement
