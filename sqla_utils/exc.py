@@ -3,7 +3,11 @@ from __future__ import annotations
 from typing import Any
 
 
-class UnknownItemError(Exception):
+class DataError(Exception):
+    """Base class for sqla-utils exceptions."""
+
+
+class UnknownItemError(DataError):
     """An unknown item was queried.
 
     By default, a message a is generated from the supplied attributes, but
