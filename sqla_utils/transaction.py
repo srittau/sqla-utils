@@ -9,6 +9,7 @@ from sqlalchemy.schema import Table
 from sqlalchemy.sql import ColumnElement
 
 _T = TypeVar("_T")
+_TA = TypeVar("_TA", bound="Transaction")
 
 
 class Transaction:
@@ -24,16 +25,13 @@ class Transaction:
 
     def __init__(self, session: Session) -> None:
         self.session = session
-        self.transaction: SATransaction | None = None
 
     @property
     def connection(self) -> Connection:
         return self.session.connection()
 
-    def __enter__(self) -> Transaction:
-        if self.transaction is not None:
-            raise RuntimeError("transaction already running")
-        self.transaction = self.connection.begin()
+    def __enter__(self: _TA) -> _TA:
+        self.session.begin()
         return self
 
     def __exit__(
@@ -42,20 +40,15 @@ class Transaction:
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
-        assert self.transaction is not None
         try:
-            try:
-                self.session.flush()
-            except BaseException:
-                self.transaction.rollback()
-                raise
-            if exc_type:
-                self.transaction.rollback()
-            else:
-                self.transaction.commit()
-        finally:
-            self.transaction.close()
-            self.transaction = None
+            self.session.flush()
+        except BaseException:
+            self.session.rollback()
+            raise
+        if exc_type:
+            self.session.rollback()
+        else:
+            self.session.commit()
 
     @overload
     def query(self, entities: Table, **kwargs: Any) -> Query[Any]:

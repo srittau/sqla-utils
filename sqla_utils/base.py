@@ -3,14 +3,14 @@ from __future__ import annotations
 from typing import Any, TypeVar
 from uuid import UUID
 
-from sqlalchemy.orm import Query
+from sqlalchemy import Table
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import Query
 
 from .exc import UnknownItemError
 from .transaction import Transaction
 
 _DB = TypeVar("_DB", bound="DBObjectBase")
-
 
 _DeclarativeBase = declarative_base()
 
@@ -19,11 +19,12 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
     """Base class for mapped classes.
 
     Each non-abstract sub-class must provide a __tablename__
-    class attribute.
+    or a __table__ class attribute.
     """
 
     __abstract__ = True
     __tablename__: str
+    __table__: Table
 
     @classmethod
     def item_type(cls) -> str:
@@ -32,10 +33,15 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         Used for describing exceptions. Can be overriden by sub-classes.
         Defaults to the table name.
         """
-        return cls.__tablename__
+        if hasattr(cls, "__tablename__"):
+            return cls.__tablename__
+        elif hasattr(cls, "__table__"):
+            return cls.__table__.name
+        else:
+            raise RuntimeError(f"{cls!r} missing __table__ and __tablename__")
 
     @classmethod
-    def query_all(
+    def query(
         cls: type[_DB],
         t: Transaction,
         *conditions: Any,
@@ -52,6 +58,34 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         return query
 
     @classmethod
+    def count(cls, t: Transaction, *conditions: Any) -> int:
+        """Return number of entries for a given query condition.
+
+        Return the total number of entries if no filter condition
+        is specified.
+        """
+        return cls.query(t, *conditions).count()
+
+    @classmethod
+    def first(
+        cls: type[_DB],
+        query: Query[_DB],
+        *,
+        field: str | None = None,
+        value: Any = None,
+    ) -> _DB:
+        """Return a single entry from a query.
+
+        If the database contains multiple entries that match the given
+        conditions, return an arbitrary entry. If it contains no matching
+        entries, raise a UnknownItemError.
+        """
+        o: _DB | None = query.first()
+        if o is None:
+            raise UnknownItemError(cls.item_type(), field, value)
+        return o
+
+    @classmethod
     def fetch_all(
         cls: type[_DB],
         t: Transaction,
@@ -63,16 +97,7 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         Return all entries of this class's table by default, but the
         query can be narrowed by supplying filter conditions.
         """
-        return cls.query_all(t, *conditions, order_by=order_by).all()
-
-    @classmethod
-    def count(cls, t: Transaction, *conditions: Any) -> int:
-        """Return number of entries for a given query condition.
-
-        Return the total number of entries if no filter condition
-        is specified.
-        """
-        return cls.query_all(t, *conditions).count()
+        return cls.query(t, *conditions, order_by=order_by).all()
 
     @classmethod
     def fetch_one(
@@ -89,11 +114,8 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         conditions, return an arbitrary entry. If it contains no matching
         entries, raise a UnknownItemError.
         """
-        q = cls.query_all(t, *conditions, order_by=order_by)
-        o: _DB | None = q.first()
-        if o is None:
-            raise UnknownItemError(cls.item_type(), field, value)
-        return o
+        q = cls.query(t, *conditions, order_by=order_by)
+        return cls.first(q, field=field, value=value)
 
     @classmethod
     def fetch_by_id(cls: type[_DB], t: Transaction, id: int) -> _DB:
@@ -130,7 +152,18 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
 
         If no conditions are given, delete all entries from the table.
         """
-        cls.query_all(t, *conditions).delete()
+        cls.query(t, *conditions).delete()
+
+    @classmethod
+    def delete_one(cls, t: Transaction, *conditions: Any) -> None:
+        """Delete an entry that matches certain conditions.
+
+        If the database contains multiple entries that match the given
+        conditions, delete an arbitrary entry. If it contains no matching
+        entries, raise a UnknownItemError.
+        """
+        o = cls.fetch_one(t, *conditions)
+        t.delete(o)
 
     @classmethod
     def delete_by_id(cls, t: Transaction, id: int) -> None:
@@ -167,3 +200,7 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         """
         item = cls.fetch_by_uuid(t, uuid)
         item.delete(t)
+
+    def delete(self, t: Transaction) -> None:
+        """Delete this entry from the database."""
+        t.delete(self)

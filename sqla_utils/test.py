@@ -8,14 +8,13 @@ from types import TracebackType
 from typing import Any, Iterable, Mapping, Sequence, TypeVar
 
 from sqlalchemy.engine import Connection, create_engine
-from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.sql import insert, select
 from sqlalchemy.sql.schema import MetaData, Table
 
 from .builder import DatabaseBuilder
+from .types import RowType
 
 
-RowType = Any
 _S = TypeVar("_S", bound="DBFixture")
 
 
@@ -83,19 +82,18 @@ class DBFixture:
     requirements: list[str] = []
 
     def __init__(self) -> None:
-        self._session: Session | None = None
+        self.engine = create_engine("sqlite:///:memory:")
         self._connection: Connection | None = None
         self._db_builder: DatabaseBuilder | None = None
 
     def __enter__(self: _S) -> _S:
-        engine = create_engine("sqlite:///:memory:")
-        self._connection = engine.connect()
-        self.connection.execute("PRAGMA foreign_keys=ON")
-        session_maker = sessionmaker(bind=self.connection, autocommit=True)
-        self._session = session_maker()
-        self.__metadata__.bind = engine
+        self._connection = self.engine.connect()
+        self._connection.execute("PRAGMA foreign_keys=ON")
+        self.__metadata__.bind = self.engine
 
-        self._db_builder = DatabaseBuilder(self.connection, str(self.sql_path))
+        self._db_builder = DatabaseBuilder(
+            self.connection.execute, str(self.sql_path)
+        )
         self.require(*self.requirements)
         return self
 
@@ -105,12 +103,10 @@ class DBFixture:
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
-        assert self._session is not None
         assert self._connection is not None
         self._connection.close()
         self._connection = None
-        self._session.close()
-        self._session = None
+        self.engine = None
 
     @property
     def connection(self) -> Connection:
@@ -158,7 +154,8 @@ class DBFixture:
 
     def select_all_rows(self, table_name: str) -> list[RowType]:
         """Return all rows from a table."""
-        return self.select_sql(select(table_name))
+        table = Table(table_name, self.__metadata__, autoload=True)
+        return self.select_sql(select([table]))
 
     def select_only_row(self, table_name: str) -> RowType:
         """Return the only row from a table.
