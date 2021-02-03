@@ -31,7 +31,6 @@ class Transaction:
         return self.session.connection()
 
     def __enter__(self: _TA) -> _TA:
-        self.session.begin()
         return self
 
     def __exit__(
