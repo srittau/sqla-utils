@@ -39,6 +39,11 @@ class Transaction:
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
+        try:
+            self.session.flush()
+        except BaseException:
+            self.session.rollback()
+            raise
         if exc_type:
             self.session.rollback()
         else:
