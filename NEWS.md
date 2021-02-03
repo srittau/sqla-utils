@@ -1,3 +1,7 @@
+# News in version 0.1.3
+
+Add `Session`.
+
 # News in version 0.1.2
 
 Reenable flush during `Transaction.__exit__()`.
