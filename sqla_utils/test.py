@@ -9,9 +9,11 @@ from typing import Any, Iterable, Mapping, Sequence, TypeVar
 
 from sqlalchemy.engine import Connection, create_engine
 from sqlalchemy.sql import insert, select
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql.schema import MetaData, Table
 
 from .builder import DatabaseBuilder
+from .session import Session
 from .types import RowType
 
 
@@ -85,11 +87,13 @@ class DBFixture:
         self.engine = create_engine("sqlite:///:memory:")
         self._connection: Connection | None = None
         self._db_builder: DatabaseBuilder | None = None
+        self._session: Session | None = None
 
     def __enter__(self: _S) -> _S:
         self._connection = self.engine.connect()
         self._connection.execute("PRAGMA foreign_keys=ON")
         self.__metadata__.bind = self.engine
+        self._session = Session(sessionmaker(bind=self.engine)).__enter__()
 
         self._db_builder = DatabaseBuilder(
             self.connection.execute, str(self.sql_path)
@@ -103,7 +107,10 @@ class DBFixture:
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
+        assert self._session is not None
         assert self._connection is not None
+        self._session.__exit__(exc_type, exc_val, exc_tb)
+        self._session = None
         self._connection.close()
         self._connection = None
         self.engine = None
@@ -113,6 +120,12 @@ class DBFixture:
         if self._connection is None:
             raise RuntimeError("call __enter__() before accessing connection")
         return self._connection
+
+    @property
+    def session(self) -> Session:
+        if self._session is None:
+            raise RuntimeError("call __enter__() before accessing session")
+        return self._session
 
     def require(self, *features: str) -> None:
         assert self._db_builder is not None
