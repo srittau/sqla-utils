@@ -1,3 +1,5 @@
+# News in version 0.1.5
+
 # News in version 0.1.4
 
 Add `DBFixture.session` and start a session during setup.
