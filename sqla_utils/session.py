@@ -16,8 +16,6 @@ class Session:
     Must be used as context manager.
     """
 
-    _session: SASession | None
-
     def __init__(self, session_maker: Callable[[], SASession]) -> None:
         self._session_maker = session_maker
         self._session: SASession | None = None
