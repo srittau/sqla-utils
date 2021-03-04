@@ -1,5 +1,7 @@
 # News in version 0.1.5
 
+Raise a `RuntimeError` if entering a `Session` twice.
+
 # News in version 0.1.4
 
 Add `DBFixture.session` and start a session during setup.

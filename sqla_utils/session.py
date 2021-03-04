@@ -24,6 +24,8 @@ class Session:
         self._transaction: Transaction | None = None
 
     def __enter__(self) -> Session:
+        if self._session:
+            raise RuntimeError("session already started")
         self._session = self._session_maker()
         assert self._session
         self._transaction = Transaction(self._session)
