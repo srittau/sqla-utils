@@ -110,9 +110,10 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
     ) -> _DB:
         """Return a single entry from the database.
 
-        If the database contains multiple entries that match the given
-        conditions, return an arbitrary entry. If it contains no matching
-        entries, raise a UnknownItemError.
+        If the database contains no matching entries, raise an
+        UnknownItemError. If it contains multiple entries that match the given
+        conditions, return the first entry according to the given order
+        condition. If no condition is given, return an arbitrary entry.
         """
         q = cls.query(t, *conditions, order_by=order_by)
         return cls.first(q, field=field, value=value)
