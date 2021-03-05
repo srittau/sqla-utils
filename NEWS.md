@@ -1,6 +1,7 @@
 # News in version 0.1.5
 
-Raise a `RuntimeError` if entering a `Session` twice.
+- Raise a `RuntimeError` if entering a `Session` twice.
+- Call `commit()` or `rollback()` when leaving a session.
 
 # News in version 0.1.4
 

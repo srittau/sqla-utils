@@ -23,7 +23,7 @@ class Session:
 
     def __enter__(self) -> Session:
         if self._session:
-            raise RuntimeError("session already started")
+            raise RuntimeError("session already entered")
         self._session = self._session_maker()
         assert self._session
         self._transaction = Transaction(self._session)
@@ -36,7 +36,11 @@ class Session:
         exc_tb: TracebackType | None,
     ) -> None:
         if not self._session:
-            raise RuntimeError("no session")
+            raise RuntimeError("session was not entered")
+        if exc_type:
+            self._session.rollback()
+        else:
+            self._session.commit()
         self._session.close()
         self._session = None
         self._transaction = None
