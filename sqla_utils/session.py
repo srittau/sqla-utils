@@ -36,7 +36,7 @@ class Session:
         exc_tb: TracebackType | None,
     ) -> None:
         if not self._session:
-            raise RuntimeError("session was not entered")
+            raise RuntimeError("not in a session context")
         if exc_type:
             self._session.rollback()
         else:
@@ -44,6 +44,13 @@ class Session:
         self._session.close()
         self._session = None
         self._transaction = None
+
+    @property
+    def transaction(self) -> Transaction:
+        """Access the transaction directly."""
+        if self._transaction is None:
+            raise RuntimeError("not in a session context")
+        return self._transaction
 
     def begin_transaction(self) -> Transaction:
         """Start a new transaction.

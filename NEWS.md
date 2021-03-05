@@ -2,6 +2,7 @@
 
 - Raise a `RuntimeError` if entering a `Session` twice.
 - Call `commit()` or `rollback()` when leaving a session.
+- Add `Session.transaction` property.
 
 # News in version 0.1.4
 
