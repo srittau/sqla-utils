@@ -84,6 +84,7 @@ class Transaction:
         """Mark one or more instances as deleted."""
         for obj in instances:
             self.session.delete(obj)
+        self.flush(*instances)
 
     def flush(self, *objects: Any) -> None:
         """Flush object changes to the database.

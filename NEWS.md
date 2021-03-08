@@ -1,5 +1,7 @@
 # News in version 0.1.8
 
+Flush objects after deleting them from the database.
+
 # News in version 0.1.7
 
 Fix `Transaction.add`.
