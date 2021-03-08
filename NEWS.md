@@ -1,3 +1,5 @@
+# News in version 0.1.6
+
 # News in version 0.1.5
 
 - Raise a `RuntimeError` if entering a `Session` twice.
