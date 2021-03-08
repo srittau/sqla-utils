@@ -1,4 +1,8 @@
+# News in version 0.1.7
+
 # News in version 0.1.6
+
+Flush objects after adding them to the database.
 
 # News in version 0.1.5
 
