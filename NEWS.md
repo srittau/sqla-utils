@@ -1,3 +1,5 @@
+# News in version 0.1.8
+
 # News in version 0.1.7
 
 Fix `Transaction.add`.
