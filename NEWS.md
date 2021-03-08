@@ -1,5 +1,7 @@
 # News in version 0.1.7
 
+Fix `Transaction.add`.
+
 # News in version 0.1.6
 
 Flush objects after adding them to the database.

@@ -78,6 +78,7 @@ class Transaction:
     def add(self, *instances: Any) -> None:
         """Save one or more objects to the database."""
         self.session.add_all(instances)
+        self.flush(*instances)
 
     def delete(self, *instances: Any) -> None:
         """Mark one or more instances as deleted."""
