@@ -1,3 +1,7 @@
+# News in version 0.2.2
+
+Add py.typed file to source distribution.
+
 # News in version 0.2.1
 
 Re-add missing py.typed file in wheel package.
