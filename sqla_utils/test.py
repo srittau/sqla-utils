@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import os
+import shutil
 from pathlib import Path
+from tempfile import mkstemp
 from types import TracebackType
 from typing import Any, Iterable, Mapping, Sequence, TypeVar
 
 import pytest
-from sqlalchemy.engine import Connection, create_engine
+from sqlalchemy.engine import Connection, create_engine, Engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import insert, select
 from sqlalchemy.sql.schema import MetaData, Table
@@ -17,6 +20,8 @@ from .session import Session
 from .types import RowType
 
 _S = TypeVar("_S", bound="DBFixture")
+
+_MEMORY_DB_URL = "sqlite:///:memory:"
 
 
 def assert_row_equals(
@@ -66,12 +71,28 @@ class DBFixture:
     This uses SQLite to test the SUT, which means that it
     can't be used to test database-specific code.
 
-    Example:
+    Databases fixtures can be set up with one of two methods. Either, by
+    supplying a path to a directory containing SQL files that configure
+    the database. Example:
 
         >>> class MyFixture(DBFixture):
         ...     __metadata__ = DBObjectBase.metadata
         ...     sql_path = Path("./foo")
         ...     requirements = ["items"]
+
+    Alternatively, it can be pointed to a template SQLite database that
+    will be copied. Example:
+
+        >>> class MyFixture(DBFixture):
+        ...     __metadata__ = DBObjectBase.metadata
+        ...     db_path = Path("./foo.sqlite")
+
+    The fixture sub-class should contain utility methods for setting up
+    and querying the database:
+
+        >>> class MyFixture(DBFixture):
+        ...     __metadata__ = DBObjectBase.metadata
+        ...     db_path = Path("./foo.sqlite")
         ...
         ...     def insert_item(self, *, id: int, text: str) -> int:
         ...         self.insert("items", {"id": id, "text": text})
@@ -79,25 +100,39 @@ class DBFixture:
     """
 
     __metadata__: MetaData
-    sql_path: Path
+    sql_path: Path | None = None
+    db_path: Path | None = None
     requirements: list[str] = []
 
     def __init__(self) -> None:
-        self.engine = create_engine("sqlite:///:memory:")
+        if self.sql_path is None and self.db_path is None:
+            raise RuntimeError("either of sql_path or db_path must be set")
+        if self.sql_path is not None and self.db_path is not None:
+            raise RuntimeError("only one of sql_path and db_path can be set")
+        self._tmp_db: Path | None = None
+        self.engine: Engine | None = None
         self._connection: Connection | None = None
         self._db_builder: DatabaseBuilder | None = None
         self._session: Session | None = None
 
     def __enter__(self: _S) -> _S:
+        if self.db_path is not None:
+            self._tmp_db = _copy_database(self.db_path)
+            db_url = f"sqlite:///{self._tmp_db}"
+        else:
+            db_url = _MEMORY_DB_URL
+        self.engine = create_engine(db_url)
         self._connection = self.engine.connect()
         self._connection.execute("PRAGMA foreign_keys=ON")
         self.__metadata__.bind = self.engine
         self._session = Session(sessionmaker(bind=self.engine)).__enter__()
 
-        self._db_builder = DatabaseBuilder(
-            self.connection.execute, str(self.sql_path)
-        )
-        self.require(*self.requirements)
+        if self.sql_path is not None:
+            self._db_builder = DatabaseBuilder(
+                self.connection.execute, str(self.sql_path)
+            )
+        if self.requirements:
+            self.require(*self.requirements)
         return self
 
     def __exit__(
@@ -113,6 +148,9 @@ class DBFixture:
         self._connection.close()
         self._connection = None
         self.engine = None
+        if self._tmp_db is not None:
+            os.remove(self._tmp_db)
+            self._tmp_db = None
 
     @property
     def connection(self) -> Connection:
@@ -127,7 +165,8 @@ class DBFixture:
         return self._session
 
     def require(self, *features: str) -> None:
-        assert self._db_builder is not None
+        if self._db_builder is None:
+            raise RuntimeError("SQL database not built dynamically")
         self._db_builder.require(*features)
 
     def execute_sql(
@@ -257,3 +296,13 @@ class DBFixture:
 
         for row in expected_rows:
             fetched_rows = find_one(fetched_rows, row)
+
+
+def _copy_database(path: Path) -> Path:
+    fd, name = mkstemp(".sqlite", "test-")
+    dst = os.fdopen(fd, "wb")
+    src = open(path, "rb")
+    shutil.copyfileobj(src, dst)
+    src.close()
+    dst.close()
+    return Path(name)

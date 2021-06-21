@@ -1,3 +1,10 @@
+# News in version 0.2.0
+
+- `DBFixture` can now be configured with either an `sql_path` as
+  before or with a `db_path`, pointing to a template database.
+- `DBFixture.engine` is now initialized during `__enter__()`, not
+  during `__init__()`.
+
 # News in version 0.1.8
 
 Flush objects after deleting them from the database.
