@@ -4,6 +4,7 @@
   before or with a `db_path`, pointing to a template database.
 - `DBFixture.engine` is now initialized during `__enter__()`, not
   during `__init__()`.
+- Initialize `DBFixture.__metadata__`.
 
 # News in version 0.1.8
 

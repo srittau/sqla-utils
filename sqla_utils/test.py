@@ -99,7 +99,7 @@ class DBFixture:
         ...         return id
     """
 
-    __metadata__: MetaData
+    __metadata__: MetaData = MetaData()
     sql_path: Path | None = None
     db_path: Path | None = None
     requirements: list[str] = []
