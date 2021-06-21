@@ -1,3 +1,7 @@
+# News in version 0.2.1
+
+Re-add missing py.typed file in wheel package.
+
 # News in version 0.2.0
 
 - `DBFixture` can now be configured with either an `sql_path` as
