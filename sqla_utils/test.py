@@ -118,10 +118,7 @@ class DBFixture:
     def __enter__(self: _S) -> _S:
         if self.db_path is not None:
             self._tmp_db = _copy_database(self.db_path)
-            db_url = f"sqlite:///{self._tmp_db}"
-        else:
-            db_url = _MEMORY_DB_URL
-        self.engine = create_engine(db_url)
+        self.engine = create_engine(self.db_url)
         self._connection = self.engine.connect()
         self._connection.execute("PRAGMA foreign_keys=ON")
         self.__metadata__.bind = self.engine
@@ -151,6 +148,13 @@ class DBFixture:
         if self._tmp_db is not None:
             os.remove(self._tmp_db)
             self._tmp_db = None
+
+    @property
+    def db_url(self) -> str:
+        if self._tmp_db is not None:
+            return f"sqlite:///{self._tmp_db}"
+        else:
+            return _MEMORY_DB_URL
 
     @property
     def connection(self) -> Connection:
