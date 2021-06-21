@@ -3,7 +3,6 @@ from __future__ import annotations
 import re
 from typing import Generator, Iterable, Iterator
 
-
 _SQL_COMMENT_START = "--"
 _SQL_STRING_DELIMITER = "'"
 _SQL_STATEMENT_DELIMITER = ";"

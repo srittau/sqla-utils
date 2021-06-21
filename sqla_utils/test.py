@@ -2,20 +2,19 @@
 
 from __future__ import annotations
 
-import pytest
 from pathlib import Path
 from types import TracebackType
 from typing import Any, Iterable, Mapping, Sequence, TypeVar
 
+import pytest
 from sqlalchemy.engine import Connection, create_engine
-from sqlalchemy.sql import insert, select
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql import insert, select
 from sqlalchemy.sql.schema import MetaData, Table
 
 from .builder import DatabaseBuilder
 from .session import Session
 from .types import RowType
-
 
 _S = TypeVar("_S", bound="DBFixture")
 

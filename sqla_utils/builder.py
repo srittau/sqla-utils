@@ -7,7 +7,6 @@ from typing import Any, Callable, Iterable
 
 from .split_sql import split_sql
 
-
 SQLExecutor = Callable[[str], Any]
 
 
