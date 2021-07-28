@@ -10,7 +10,7 @@ from types import TracebackType
 from typing import Any, Iterable, Mapping, Sequence, TypeVar
 
 import pytest
-from sqlalchemy.engine import Connection, create_engine, Engine
+from sqlalchemy.engine import Connection, Engine, create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import insert, select
 from sqlalchemy.sql.schema import MetaData, Table
