@@ -41,7 +41,9 @@ class DatabaseBuilder:
     >>>
     """
 
-    def __init__(self, executor: SQLExecutor, path: PathLike | str) -> None:
+    def __init__(
+        self, executor: SQLExecutor, path: PathLike[str] | str
+    ) -> None:
         self._executor = executor
         self._path = Path(path)
         self._parsed: set[str] = set()

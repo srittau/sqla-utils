@@ -36,7 +36,7 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         if hasattr(cls, "__tablename__"):
             return cls.__tablename__
         elif hasattr(cls, "__table__"):
-            return cls.__table__.name
+            return cls.__table__.name  # type: ignore[no-any-return]
         else:
             raise RuntimeError(f"{cls!r} missing __table__ and __tablename__")
 
@@ -64,7 +64,7 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         Return the total number of entries if no filter condition
         is specified.
         """
-        return cls.query(t, *conditions).count()
+        return cls.query(t, *conditions).count()  # type: ignore[no-any-return]
 
     @classmethod
     def first(
@@ -97,7 +97,7 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         Return all entries of this class's table by default, but the
         query can be narrowed by supplying filter conditions.
         """
-        return cls.query(t, *conditions, order_by=order_by).all()
+        return cls.query(t, *conditions, order_by=order_by).all()  # type: ignore[no-any-return]
 
     @classmethod
     def fetch_one(
