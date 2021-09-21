@@ -1,3 +1,8 @@
+# News in version 0.2.3
+
+Only call `commit()` or `rollback()` from `Session.__exit__()`
+if the session is still active.
+
 # News in version 0.2.2
 
 Add py.typed file to source distribution.

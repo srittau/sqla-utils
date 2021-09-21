@@ -37,10 +37,11 @@ class Session:
     ) -> None:
         if not self._session:
             raise RuntimeError("not in a session context")
-        if exc_type:
-            self._session.rollback()
-        else:
-            self._session.commit()
+        if self._session.is_active:
+            if exc_type:
+                self._session.rollback()
+            else:
+                self._session.commit()
         self._session.close()
         self._session = None
         self._transaction = None
