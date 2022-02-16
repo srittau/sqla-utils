@@ -21,10 +21,10 @@ python = ">= 3.8, <4"
 SQLAlchemy = "^1.4"
 
 [tool.poetry.dev-dependencies]
-black = "21.6b0"
-flake8 = "~3.9.2"
+black = "^22.1.0"
+flake8 = "^4.0.1"
 isort = "^5.9.2"
-mypy = "0.910"
+mypy = "0.931"
 pytest = "*"
 
 [tool.black]
