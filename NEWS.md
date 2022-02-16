@@ -1,3 +1,8 @@
+# News in version 0.3.0
+
+Derive `UnknownItemError` from new exception `DataItemError` and add
+`DuplicateItemError`.
+
 # News in version 0.2.3
 
 Only call `commit()` or `rollback()` from `Session.__exit__()`
