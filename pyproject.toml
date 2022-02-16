@@ -1,6 +1,31 @@
-[build-system]
-requires = ["setuptools >= 40.9", "wheel"]
-build-backend = "setuptools.build_meta"
+[tool.poetry]
+name = "sqla-utils"
+version = "0.3.0"
+description = "Opinionated utilities for working with SQLAlchemy"
+readme = "README.md"
+keywords = ["sqlalchemy", "orm"]
+authors = ["Sebastian Rittau <srittau@rittau.biz>"]
+license = "MIT"
+homepage = "https://github.com/srittau/sqla-utils"
+repository = "https://github.com/srittau/sqla-utils"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development",
+    "Typing :: Typed",
+]
+include = ["*/py.typed"]
+
+[tool.poetry.dependencies]
+python = ">= 3.8, <4"
+SQLAlchemy = "^1.4"
+
+[tool.poetry.dev-dependencies]
+black = "21.6b0"
+flake8 = "~3.9.2"
+isort = "^5.9.2"
+mypy = "0.910"
+pytest = "*"
 
 [tool.black]
 target-version = ["py38"]
@@ -24,3 +49,6 @@ warn_redundant_casts = true
 warn_return_any = true
 warn_unused_configs = true
 warn_unused_ignores = true
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
