@@ -1,6 +1,7 @@
 # News in version 0.3.1
 
-Re-export all exceptions from `sqla_utils`.
+- Re-export all exceptions from `sqla_utils`.
+- Improve return type annotation of `Transaction.execute()`.
 
 # News in version 0.3.0
 

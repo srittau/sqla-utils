@@ -3,7 +3,7 @@ from __future__ import annotations
 from types import TracebackType
 from typing import Any, Iterable, Mapping, TypeVar, overload
 
-from sqlalchemy.engine import Connection
+from sqlalchemy.engine import Connection, Result
 from sqlalchemy.orm import Query, Session
 from sqlalchemy.schema import Table
 from sqlalchemy.sql import ColumnElement
@@ -114,9 +114,9 @@ class Transaction:
         self,
         query: Any,
         args: Mapping[str, Any] | Iterable[Mapping[str, Any]] | None = None,
-    ) -> Any:
+    ) -> Result:
         """Wrapper around Session.execute()."""
-        return self.session.execute(query, args)
+        return self.session.execute(query, args)  # type: ignore[no-any-return]
 
     def scalar(
         self,
