@@ -192,7 +192,7 @@ class DBFixture:
         else:
             res = self.connection.execute(query, args)
         try:
-            return res.fetchall()  # type: ignore[no-any-return]
+            return res.fetchall()
         finally:
             res.close()
 

@@ -64,7 +64,7 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         Return the total number of entries if no filter condition
         is specified.
         """
-        return cls.query(t, *conditions).count()  # type: ignore[no-any-return]
+        return cls.query(t, *conditions).count()
 
     @classmethod
     def first(
@@ -97,7 +97,7 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         Return all entries of this class's table by default, but the
         query can be narrowed by supplying filter conditions.
         """
-        return cls.query(t, *conditions, order_by=order_by).all()  # type: ignore[no-any-return]
+        return cls.query(t, *conditions, order_by=order_by).all()
 
     @classmethod
     def fetch_one(
