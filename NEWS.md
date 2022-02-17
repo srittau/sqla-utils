@@ -1,3 +1,7 @@
+# News in version 0.3.1
+
+Re-export all exceptions from `sqla_utils`.
+
 # News in version 0.3.0
 
 Derive `UnknownItemError` from new exception `DataItemError` and add
