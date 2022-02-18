@@ -116,7 +116,7 @@ class Transaction:
         args: Mapping[str, Any] | Iterable[Mapping[str, Any]] | None = None,
     ) -> Result:
         """Wrapper around Session.execute()."""
-        return self.session.execute(query, args)  # type: ignore[no-any-return]
+        return self.session.execute(query, args)
 
     def scalar(
         self,
