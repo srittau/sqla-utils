@@ -219,7 +219,7 @@ class DBFixture:
         rows = self.select_all_rows(table_name)
         assert len(rows) == 1, (
             f"expected exactly one row in table '{table_name}', "
-            "got {len(rows)}"
+            f"got {len(rows)}"
         )
         return rows[0]
 

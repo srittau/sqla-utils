@@ -9,10 +9,10 @@ license = "MIT"
 homepage = "https://github.com/srittau/sqla-utils"
 repository = "https://github.com/srittau/sqla-utils"
 classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: Developers",
-    "Topic :: Software Development",
-    "Typing :: Typed",
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development",
+  "Typing :: Typed",
 ]
 include = ["NEWS.md", "*/py.typed"]
 

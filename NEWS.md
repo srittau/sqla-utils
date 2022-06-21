@@ -2,6 +2,7 @@
 
 - Re-export all exceptions from `sqla_utils`.
 - Improve return type annotation of `Transaction.execute()`.
+- Fix exception message of `DBFixture.select_only_row()`.
 
 # News in version 0.3.0
 
