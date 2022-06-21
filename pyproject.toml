@@ -24,7 +24,7 @@ SQLAlchemy = "^1.4"
 black = "^22.1.0"
 flake8 = "^4.0.1"
 isort = "^5.9.2"
-mypy = "0.931"
+mypy = "0.961"
 pytest = "*"
 types-SQLAlchemy = "^1.4.17"
 
