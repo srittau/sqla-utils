@@ -7,7 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11-dev"]
+        # Python 3.11 is not supported yet, due to
+        # <https://github.com/python-greenlet/greenlet/issues/305>.
+        # greenlet is a dependency of SQLAlchemy.
+        python-version: ["3.8", "3.9", "3.10"]
       fail-fast: false
 
     steps:
