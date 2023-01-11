@@ -6,7 +6,7 @@ Opinionated utilities for working with SQLAlchemy
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/sqla-utils)](https://pypi.python.org/pypi/sqla-utils/)
 [![GitHub](https://img.shields.io/github/release/srittau/sqla-utils/all.svg)](https://github.com/srittau/sqla-utils/releases/)
 [![pypi](https://img.shields.io/pypi/v/sqla-utils.svg)](https://pypi.python.org/pypi/sqla-utils/)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/srittau/sqla-utils/Test%20and%20lint)](https://github.com/srittau/sqla-utils/actions/workflows/test-and-lint.yml)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/srittau/sqla-utils/test-and-lint.yml?branch=main)](https://github.com/srittau/sqla-utils/actions/workflows/test-and-lint.yml)
 
 ## Contents
 
