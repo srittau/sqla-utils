@@ -20,7 +20,7 @@ include = ["NEWS.md", "*/py.typed"]
 python = ">= 3.8, <4"
 SQLAlchemy = "^1.4"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 black = "^22.1.0"
 flake8 = { version = "^6.0.0", python = ">= 3.8.1" }
 isort = "^5.9.2"
