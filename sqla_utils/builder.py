@@ -4,13 +4,9 @@ import re
 from collections.abc import Callable, Iterable
 from os import PathLike
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from sqlalchemy import text
 from sqlalchemy.sql.elements import TextClause
-
-if TYPE_CHECKING:
-    from _typeshed import Incomplete
 
 from .split_sql import split_sql
 
