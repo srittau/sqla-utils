@@ -1,3 +1,7 @@
+# News in version 0.3.2
+
+- Fix an SQLAlchemy future compatibility warning.
+
 # News in version 0.3.1
 
 - Re-export all exceptions from `sqla_utils`.

@@ -4,8 +4,7 @@ from typing import Any, TypeVar
 from uuid import UUID
 
 from sqlalchemy import Table
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Query
+from sqlalchemy.orm import Query, declarative_base
 
 from .exc import UnknownItemError
 from .transaction import Transaction
