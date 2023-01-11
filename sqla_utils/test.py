@@ -10,6 +10,7 @@ from types import TracebackType
 from typing import Any, Iterable, Mapping, Sequence, TypeVar
 
 import pytest
+from sqlalchemy import text
 from sqlalchemy.engine import Connection, Engine, create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import insert, select
@@ -120,7 +121,7 @@ class DBFixture:
             self._tmp_db = _copy_database(self.db_path)
         self.engine = create_engine(self.db_url)
         self._connection = self.engine.connect()
-        self._connection.execute("PRAGMA foreign_keys=ON")
+        self._connection.execute(text("PRAGMA foreign_keys=ON"))
         self.__metadata__.bind = self.engine
         self._session = Session(sessionmaker(bind=self.engine)).__enter__()
 

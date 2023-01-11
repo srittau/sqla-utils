@@ -1,13 +1,20 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Callable, Iterable
 from os import PathLike
 from pathlib import Path
-from typing import Any, Callable, Iterable
+from typing import TYPE_CHECKING
+
+from sqlalchemy import text
+from sqlalchemy.sql.elements import TextClause
+
+if TYPE_CHECKING:
+    from _typeshed import Incomplete
 
 from .split_sql import split_sql
 
-SQLExecutor = Callable[[str], Any]
+SQLExecutor = Callable[[TextClause], object]
 
 
 class DependencyLoopError(Exception):
@@ -95,5 +102,5 @@ def _parse_sql_headers(stream: Iterable[str]) -> dict[str, str]:
 def _execute_sql_stream(executor: SQLExecutor, stream: Iterable[str]) -> None:
     """Run the SQL statements in a stream against a database."""
     for query in split_sql(stream):
-        query = query.replace("%", "%%")
-        executor(query)
+        query = query.replace(":", "\\:")
+        executor(text(query))

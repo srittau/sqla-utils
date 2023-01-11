@@ -1,3 +1,7 @@
+# News in version 0.3.3
+
+- Fix an SQLAlchemy future compatibility warning when executing text queries.
+
 # News in version 0.3.2
 
 - Fix an SQLAlchemy future compatibility warning.
