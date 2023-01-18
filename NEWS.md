@@ -1,4 +1,4 @@
-# Unreleased Changes
+# News in version 0.4.0
 
 - Prepare `DBFixture` for SQLAlchemy 2.0.
     - Wrap all SQL calls in explicit transactions to avoid
