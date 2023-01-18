@@ -34,7 +34,7 @@ def assert_row_equals(row: Row, expected_values: Mapping[str, Any]) -> None:
     """
 
     for column_name, expected in expected_values.items():
-        column_value = row[column_name]
+        column_value = row._mapping[column_name]  # type: ignore
         assert (
             column_value == expected
         ), f"column '{column_name}': {expected!r} != {column_value!r}"
