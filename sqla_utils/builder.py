@@ -7,10 +7,11 @@ from pathlib import Path
 
 from sqlalchemy import text
 from sqlalchemy.sql.elements import TextClause
+from typing_extensions import TypeAlias
 
 from .split_sql import split_sql
 
-SQLExecutor = Callable[[TextClause], object]
+SQLExecutor: TypeAlias = "Callable[[TextClause], object]"
 
 
 class DependencyLoopError(Exception):
