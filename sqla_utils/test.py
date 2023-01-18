@@ -172,33 +172,36 @@ class DBFixture:
     def require(self, *features: str) -> None:
         if self._db_builder is None:
             raise RuntimeError("SQL database not built dynamically")
-        self._db_builder.require(*features)
+        with self.connection.begin():
+            self._db_builder.require(*features)
 
     def execute_sql(
-        self, query: str, args: Sequence[Any] | None = None
+        self, query: str, args: Mapping[str, Any] | None = None
     ) -> None:
         """Execute a SQL query."""
-        if args is None:
-            res = self.connection.execute(query)
-        else:
-            res = self.connection.execute(query, args)
-        res.close()
-
-    def select_sql(
-        self, query: str, args: Sequence[Any] | None = None
-    ) -> list[RowType]:
-        """Execute a SQL SELECT and return all rows."""
-        if args is None:
-            res = self.connection.execute(query)
-        else:
-            res = self.connection.execute(query, args)
-        try:
-            return res.fetchall()
-        finally:
+        with self.connection.begin():
+            if args is None:
+                res = self.connection.execute(text(query))
+            else:
+                res = self.connection.execute(text(query), args)
             res.close()
 
+    def select_sql(
+        self, query: str, args: Mapping[str, Any] | None = None
+    ) -> list[RowType]:
+        """Execute a SQL SELECT and return all rows."""
+        with self.connection.begin():
+            if args is None:
+                res = self.connection.execute(text(query))
+            else:
+                res = self.connection.execute(text(query), args)
+            try:
+                return res.fetchall()
+            finally:
+                res.close()
+
     def select_sql_one_row(
-        self, query: str, args: Sequence[Any] | None = None
+        self, query: str, args: Mapping[str, Any] | None = None
     ) -> RowType:
         """Execute a SQL SELECT and return one row.
 

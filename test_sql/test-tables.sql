@@ -1,0 +1,3 @@
+CREATE TABLE foo(
+    bar VARCHAR(100) PRIMARY KEY
+);

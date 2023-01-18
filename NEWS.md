@@ -1,5 +1,14 @@
 # Unreleased Changes
 
+- Prepare `DBFixture` for SQLAlchemy 2.0.
+    - Wrap all SQL calls in explicit transactions to avoid
+      SQLAlchemy future compatibility warnings.
+    - Encapsulate all SQL strings into `text()` to avoid
+      SQLAlchemy future compatibility warnings.
+    - Bind parameters in the first argument to `execute_sql()`,
+      `select_sql()`, and `select_sql_one_row()` are now specified using
+      the `:arg` format. Arguments are passed as a mapping as second
+      argument.
 - Fix the example in the docstring for `DatabaseBuilder`.
 
 # News in version 0.3.4
