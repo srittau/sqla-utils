@@ -1,3 +1,8 @@
+# News in version 0.3.4
+
+- `Transaction.execute()` and `Transaction.scalar()`: Wrap SQL strings in
+  `text()` to avoid SQLAlchemy future compatibility warnings.
+
 # News in version 0.3.3
 
 - Fix an SQLAlchemy future compatibility warning when executing text queries.
