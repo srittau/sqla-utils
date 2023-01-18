@@ -1,3 +1,4 @@
-from typing import Any
+from sqlalchemy.engine.row import Row
+from typing_extensions import TypeAlias
 
-RowType = Any
+RowType: TypeAlias = Row

@@ -2,6 +2,7 @@
 
 - Fix various `DBFixture` methods.
 - Fix various SQLAlchemy 2.0 compatibility issues in `DBFixture`.
+- Update the `RowType` type alias.
 
 # News in version 0.4.0
 

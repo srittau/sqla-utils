@@ -11,23 +11,20 @@ from typing import Any, Iterable, Mapping, Sequence, TypeVar
 
 import pytest
 from sqlalchemy import text
-from sqlalchemy.engine import Connection, Engine, create_engine
+from sqlalchemy.engine import Connection, Engine, Row, create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import insert, select
 from sqlalchemy.sql.schema import MetaData, Table
 
 from .builder import DatabaseBuilder
 from .session import Session
-from .types import RowType
 
 _S = TypeVar("_S", bound="DBFixture")
 
 _MEMORY_DB_URL = "sqlite:///:memory:"
 
 
-def assert_row_equals(
-    row: Mapping[str, Any], expected_values: Mapping[str, Any]
-) -> None:
+def assert_row_equals(row: Row, expected_values: Mapping[str, Any]) -> None:
     """Assert that a row contains expected values.
 
     row is a mapping as returned from execute_sql_one_row() or
@@ -44,7 +41,7 @@ def assert_row_equals(
 
 
 def assert_one_row_equals(
-    rows: Iterable[Mapping[str, Any]], expected_values: Mapping[str, Any]
+    rows: Iterable[Row], expected_values: Mapping[str, Any]
 ) -> None:
     """Assert that one of a list of rows contains the expected values.
 
@@ -54,7 +51,7 @@ def assert_one_row_equals(
     in expected_values. Those are ignored.
     """
 
-    def check_row(row: Mapping[str, Any]) -> bool:
+    def check_row(row: Row) -> bool:
         try:
             assert_row_equals(row, expected_values)
         except AssertionError:
@@ -188,7 +185,7 @@ class DBFixture:
 
     def select_sql(
         self, query: str, args: Mapping[str, Any] | None = None
-    ) -> list[RowType]:
+    ) -> list[Row]:
         """Execute a SQL SELECT and return all rows."""
         with self.connection.begin():
             if args is None:
@@ -202,7 +199,7 @@ class DBFixture:
 
     def select_sql_one_row(
         self, query: str, args: Mapping[str, Any] | None = None
-    ) -> RowType:
+    ) -> Row:
         """Execute a SQL SELECT and return one row.
 
         Raise an AssertionError if the result has zero or more than one row.
@@ -211,14 +208,14 @@ class DBFixture:
         assert len(rows) == 1, f"got {len(rows)} rows, expected 1"
         return rows[0]
 
-    def select_all_rows(self, table_name: str) -> list[RowType]:
+    def select_all_rows(self, table_name: str) -> list[Row]:
         """Return all rows from a table."""
         table = Table(table_name, self.__metadata__, autoload_with=self.engine)
         with self.connection.begin():
             res = self.connection.execute(select(table))
             return res.fetchall()
 
-    def select_only_row(self, table_name: str) -> RowType:
+    def select_only_row(self, table_name: str) -> Row:
         """Return the only row from a table.
 
         Raise an AssertionError if the table has zero or more than one row."""
@@ -292,9 +289,7 @@ class DBFixture:
             return
         assert len(fetched_rows) == len(expected_rows)
 
-        def find_one(
-            rs: list[RowType], expected: Mapping[str, Any]
-        ) -> list[RowType]:
+        def find_one(rs: list[Row], expected: Mapping[str, Any]) -> list[Row]:
             __tracebackhide__ = True
             for i, tr in enumerate(rs):
                 try:
