@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sqla-utils"
-version = "0.4.0"
+version = "0.4.1.dev0"
 description = "Opinionated utilities for working with SQLAlchemy"
 readme = "README.md"
 keywords = ["sqlalchemy", "orm"]
