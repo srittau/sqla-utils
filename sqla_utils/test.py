@@ -305,9 +305,7 @@ class DBFixture:
 
 def _copy_database(path: Path) -> Path:
     fd, name = mkstemp(".sqlite", "test-")
-    dst = os.fdopen(fd, "wb")
-    src = open(path, "rb")
-    shutil.copyfileobj(src, dst)
-    src.close()
-    dst.close()
+    with os.fdopen(fd, "wb") as dst:
+        with open(path, "rb") as src:
+            shutil.copyfileobj(src, dst)
     return Path(name)
