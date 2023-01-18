@@ -35,7 +35,7 @@ class DatabaseBuilder:
     >>> f = open("feature2.sql", "w")
     >>> f.write("SELECT * FROM feature2;")
     >>> f.close()
-    >>> builder = DatabaseBuilder(engine, ".")
+    >>> builder = DatabaseBuilder(engine.execute, ".")
     >>> builder.require("feature1")
     SELECT * FROM feature2
     SELECT * FROM feature1

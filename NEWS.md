@@ -1,5 +1,7 @@
 # Unreleased Changes
 
+- Fix the example in the docstring for `DatabaseBuilder`.
+
 # News in version 0.3.4
 
 - `Transaction.execute()` and `Transaction.scalar()`: Wrap SQL strings in
