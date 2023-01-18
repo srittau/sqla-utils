@@ -33,3 +33,13 @@ class TestDBFixture:
     def test_select_sql_one_row(self, fix: ExampleFixture) -> None:
         assert fix.select_sql_one_row("SELECT 1") == (1,)
         assert fix.select_sql_one_row("SELECT :arg", {"arg": 42}) == (42,)
+
+    def test_select_all_rows(self, fix: ExampleFixture) -> None:
+        fix.execute_sql("CREATE TABLE test (id INTEGER, text VARCHAR(10))")
+        fix.execute_sql("INSERT INTO test VALUES (42, 'foo')")
+        assert fix.select_all_rows("test") == [(42, "foo")]
+
+    def test_insert(self, fix: ExampleFixture) -> None:
+        fix.execute_sql("CREATE TABLE test (id INTEGER, text VARCHAR(10))")
+        fix.insert("test", {"id": 42, "text": "foo"})
+        assert fix.select_sql("SELECT id, text FROM test") == [(42, "foo")]

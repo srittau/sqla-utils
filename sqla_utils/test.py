@@ -213,8 +213,10 @@ class DBFixture:
 
     def select_all_rows(self, table_name: str) -> list[RowType]:
         """Return all rows from a table."""
-        table = Table(table_name, self.__metadata__, autoload=True)
-        return self.select_sql(select([table]))
+        table = Table(table_name, self.__metadata__, autoload_with=self.engine)
+        with self.connection.begin():
+            res = self.connection.execute(select(table))
+            return res.fetchall()
 
     def select_only_row(self, table_name: str) -> RowType:
         """Return the only row from a table.
@@ -229,8 +231,9 @@ class DBFixture:
 
     def insert(self, table_name: str, values: Mapping[str, Any]) -> None:
         """Insert one row into a table using a mapping of values."""
-        table = Table(table_name, self.__metadata__, autoload=True)
-        self.connection.execute(insert(table, values))
+        table = Table(table_name, self.__metadata__, autoload_with=self.engine)
+        with self.connection.begin():
+            self.connection.execute(insert(table).values(values))
 
     def assert_table_is_empty(self, table_name: str) -> None:
         """Assert that a table has no rows."""

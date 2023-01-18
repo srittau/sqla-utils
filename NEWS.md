@@ -1,5 +1,8 @@
 # Unreleased Changes
 
+- Fix various `DBFixture` methods.
+- Fix various SQLAlchemy 2.0 compatibility issues in `DBFixture`.
+
 # News in version 0.4.0
 
 - Prepare `DBFixture` for SQLAlchemy 2.0.
