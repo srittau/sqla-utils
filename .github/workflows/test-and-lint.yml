@@ -35,4 +35,4 @@ jobs:
       - name: Test with pytest
         env:
           SQLALCHEMY_WARN_20: 1
-        run: poetry run pytest -Werror
+        run: poetry run pytest

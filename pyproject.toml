@@ -36,6 +36,9 @@ line-length = 79
 profile = "black"
 combine_as_imports = true
 
+[tool.pytest.ini_options]
+filterwarnings = ["error"]
+
 [tool.mypy]
 disallow_any_generics = true
 disallow_incomplete_defs = true
