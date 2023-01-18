@@ -33,4 +33,6 @@ jobs:
           poetry run mypy --version
           poetry run mypy sqla_utils test_sqla_utils
       - name: Test with pytest
-        run: poetry run pytest
+        env:
+          SQLALCHEMY_WARN_20: 1
+        run: poetry run pytest -Werror
