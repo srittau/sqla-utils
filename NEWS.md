@@ -1,5 +1,7 @@
 # Unreleased Changes
 
+# News in version 0.5.0
+
 - Make compatible with SQLAlchemy 2.0.
 - This changes some type annotations to make them compatible with
   SQLAlchemy 2.0.
