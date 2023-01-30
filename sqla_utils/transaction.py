@@ -1,13 +1,20 @@
 from __future__ import annotations
 
 from types import TracebackType
-from typing import Any, Iterable, Mapping, TypeVar, overload
+from typing import TYPE_CHECKING, Any, TypeVar, overload
 
 from sqlalchemy import text
 from sqlalchemy.engine import Connection, Result
 from sqlalchemy.orm import Query, Session
 from sqlalchemy.schema import Table
 from sqlalchemy.sql import ColumnElement
+
+if TYPE_CHECKING:
+    from sqlalchemy.engine.interfaces import (
+        _CoreAnyExecuteParams,
+        _CoreSingleExecuteParams,
+    )
+
 
 _T = TypeVar("_T")
 _TA = TypeVar("_TA", bound="Transaction")
@@ -114,8 +121,8 @@ class Transaction:
     def execute(
         self,
         query: Any,
-        args: Mapping[str, Any] | Iterable[Mapping[str, Any]] | None = None,
-    ) -> Result:
+        args: _CoreAnyExecuteParams | None = None,
+    ) -> Result[tuple[Any, ...]]:
         """Wrapper around Session.execute()."""
         if isinstance(query, str):
             query = text(query)
@@ -124,7 +131,7 @@ class Transaction:
     def scalar(
         self,
         query: Any,
-        params: Mapping[str, Any] | Iterable[Mapping[str, Any]] | None = None,
+        params: _CoreSingleExecuteParams | None = None,
     ) -> Any:
         """Wrapper around Session.scalar()."""
         if isinstance(query, str):

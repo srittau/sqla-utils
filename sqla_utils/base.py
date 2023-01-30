@@ -35,7 +35,7 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         if hasattr(cls, "__tablename__"):
             return cls.__tablename__
         elif hasattr(cls, "__table__"):
-            return cls.__table__.name  # type: ignore[no-any-return]
+            return cls.__table__.name
         else:
             raise RuntimeError(f"{cls!r} missing __table__ and __tablename__")
 

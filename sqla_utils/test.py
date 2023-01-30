@@ -7,7 +7,7 @@ import shutil
 from pathlib import Path
 from tempfile import mkstemp
 from types import TracebackType
-from typing import Any, Iterable, Mapping, Sequence, TypeVar
+from typing import TYPE_CHECKING, Any, Iterable, Mapping, Sequence, TypeVar
 
 import pytest
 from sqlalchemy import text
@@ -19,12 +19,18 @@ from sqlalchemy.sql.schema import MetaData, Table
 from .builder import DatabaseBuilder
 from .session import Session
 
+if TYPE_CHECKING:
+    from sqlalchemy.sql._typing import _DMLColumnArgument
+
 _S = TypeVar("_S", bound="DBFixture")
+_TP = TypeVar("_TP", bound=tuple[Any, ...])
 
 _MEMORY_DB_URL = "sqlite:///:memory:"
 
 
-def assert_row_equals(row: Row, expected_values: Mapping[str, Any]) -> None:
+def assert_row_equals(
+    row: Row[Any], expected_values: Mapping[str, Any]
+) -> None:
     """Assert that a row contains expected values.
 
     row is a mapping as returned from execute_sql_one_row() or
@@ -34,14 +40,14 @@ def assert_row_equals(row: Row, expected_values: Mapping[str, Any]) -> None:
     """
 
     for column_name, expected in expected_values.items():
-        column_value = row._mapping[column_name]  # type: ignore
+        column_value = row._mapping[column_name]
         assert (
             column_value == expected
         ), f"column '{column_name}': {expected!r} != {column_value!r}"
 
 
 def assert_one_row_equals(
-    rows: Iterable[Row], expected_values: Mapping[str, Any]
+    rows: Iterable[Row[Any]], expected_values: Mapping[str, Any]
 ) -> None:
     """Assert that one of a list of rows contains the expected values.
 
@@ -51,7 +57,7 @@ def assert_one_row_equals(
     in expected_values. Those are ignored.
     """
 
-    def check_row(row: Row) -> bool:
+    def check_row(row: Row[Any]) -> bool:
         try:
             assert_row_equals(row, expected_values)
         except AssertionError:
@@ -118,8 +124,7 @@ class DBFixture:
             self._tmp_db = _copy_database(self.db_path)
         self.engine = create_engine(self.db_url)
         self._connection = self.engine.connect()
-        self._connection.execute(text("PRAGMA foreign_keys=ON"))
-        self.__metadata__.bind = self.engine
+        self.execute_sql("PRAGMA foreign_keys=ON")
         self._session = Session(sessionmaker(bind=self.engine)).__enter__()
 
         if self.sql_path is not None:
@@ -185,7 +190,7 @@ class DBFixture:
 
     def select_sql(
         self, query: str, args: Mapping[str, Any] | None = None
-    ) -> list[Row]:
+    ) -> Sequence[Row[Any]]:
         """Execute a SQL SELECT and return all rows."""
         with self.connection.begin():
             if args is None:
@@ -199,7 +204,7 @@ class DBFixture:
 
     def select_sql_one_row(
         self, query: str, args: Mapping[str, Any] | None = None
-    ) -> Row:
+    ) -> Row[Any]:
         """Execute a SQL SELECT and return one row.
 
         Raise an AssertionError if the result has zero or more than one row.
@@ -208,14 +213,14 @@ class DBFixture:
         assert len(rows) == 1, f"got {len(rows)} rows, expected 1"
         return rows[0]
 
-    def select_all_rows(self, table_name: str) -> list[Row]:
+    def select_all_rows(self, table_name: str) -> Sequence[Row[Any]]:
         """Return all rows from a table."""
         table = Table(table_name, self.__metadata__, autoload_with=self.engine)
         with self.connection.begin():
             res = self.connection.execute(select(table))
             return res.fetchall()
 
-    def select_only_row(self, table_name: str) -> Row:
+    def select_only_row(self, table_name: str) -> Row[Any]:
         """Return the only row from a table.
 
         Raise an AssertionError if the table has zero or more than one row."""
@@ -226,7 +231,11 @@ class DBFixture:
         )
         return rows[0]
 
-    def insert(self, table_name: str, values: Mapping[str, Any]) -> None:
+    def insert(
+        self,
+        table_name: str,
+        values: dict[_DMLColumnArgument, Any] | Sequence[Any],
+    ) -> None:
         """Insert one row into a table using a mapping of values."""
         table = Table(table_name, self.__metadata__, autoload_with=self.engine)
         with self.connection.begin():
@@ -289,7 +298,9 @@ class DBFixture:
             return
         assert len(fetched_rows) == len(expected_rows)
 
-        def find_one(rs: list[Row], expected: Mapping[str, Any]) -> list[Row]:
+        def find_one(
+            rs: Sequence[Row[_TP]], expected: Mapping[str, Any]
+        ) -> list[Row[_TP]]:
             __tracebackhide__ = True
             for i, tr in enumerate(rs):
                 try:
@@ -297,7 +308,7 @@ class DBFixture:
                 except AssertionError:
                     pass
                 else:
-                    return rs[:i] + rs[i + 1 :]
+                    return [*rs[:i], *rs[i + 1 :]]
             pytest.fail(f"no row matching {expected} found")
 
         for row in expected_rows:

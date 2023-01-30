@@ -1,5 +1,9 @@
 # Unreleased Changes
 
+- Make compatible with SQLAlchemy 2.0.
+- This changes some type annotations to make them compatible with
+  SQLAlchemy 2.0.
+
 # News in version 0.4.1
 
 - Fix various `DBFixture` methods.
