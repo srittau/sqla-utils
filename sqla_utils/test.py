@@ -23,7 +23,7 @@ if TYPE_CHECKING:
     from sqlalchemy.sql._typing import _DMLColumnArgument
 
 _S = TypeVar("_S", bound="DBFixture")
-_TP = TypeVar("_TP", bound=tuple[Any, ...])
+_TP = TypeVar("_TP", bound="tuple[Any, ...]")
 
 _MEMORY_DB_URL = "sqlite:///:memory:"
 
