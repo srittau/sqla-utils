@@ -1,0 +1,10 @@
+version: 2
+
+updates:
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+      interval: weekly
+      time: '04:00'
+    versioning-strategy: lockfile-only
+    open-pull-requests-limit: 1
