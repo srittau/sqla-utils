@@ -126,7 +126,8 @@ class Transaction:
         """Wrapper around Session.execute()."""
         if isinstance(query, str):
             query = text(query)
-        return self.session.execute(query, args)
+        result: Result[tuple[Any, ...]] = self.session.execute(query, args)
+        return result
 
     def scalar(
         self,
