@@ -7,4 +7,8 @@ updates:
       interval: weekly
       time: '04:00'
     versioning-strategy: lockfile-only
-    open-pull-requests-limit: 1
+    groups:
+      dependencies:
+        update-types:
+          - "minor"
+          - "patch"
