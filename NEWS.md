@@ -1,5 +1,7 @@
 # Unreleased Changes
 
+- Add a `check_existence` argument to `DBObjectBase.delete_one()` and
+  `DBObjectBase.delete_by_*()` methods.
 - Fix a race condition when using `DBObjectBase.delete_one()` or one of the
   `delete_by_*()` methods.
 

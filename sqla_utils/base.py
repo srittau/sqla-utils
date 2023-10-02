@@ -155,18 +155,23 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         cls.query(t, *conditions).delete()
 
     @classmethod
-    def delete_one(cls, t: Transaction, *conditions: Any) -> None:
+    def delete_one(
+        cls, t: Transaction, *conditions: Any, check_existence: bool = True
+    ) -> None:
         """Delete an entry that matches certain conditions.
 
         If the database contains multiple entries that match the given
         conditions, delete an arbitrary entry. If it contains no matching
         entries, raise a UnknownItemError.
         """
-        cls.fetch_one(t, *conditions)
+        if check_existence:
+            cls.fetch_one(t, *conditions)
         cls.query(t, *conditions).delete()
 
     @classmethod
-    def delete_by_id(cls, t: Transaction, id: int) -> None:
+    def delete_by_id(
+        cls, t: Transaction, id: int, *, check_existence: bool = True
+    ) -> None:
         """Delete the entry with the given id.
 
         Raise UnknownItemError if no entry with this id exists.
@@ -174,11 +179,14 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         For this method to work, the database table needs to have a
         numeric column named "id".
         """
-        cls.fetch_by_id(t, id)
+        if check_existence:
+            cls.fetch_by_id(t, id)
         cls.query(t, cls.id == id).delete()
 
     @classmethod
-    def delete_by_tag(cls, t: Transaction, tag: str) -> None:
+    def delete_by_tag(
+        cls, t: Transaction, tag: str, *, check_existence: bool = True
+    ) -> None:
         """Delete the entry with the given tag.
 
         Raise UnknownItemError if no entry with this tag exists.
@@ -186,11 +194,14 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         For this method to work, the database table needs to have a
         string column named "tag".
         """
-        cls.fetch_by_tag(t, tag)
+        if check_existence:
+            cls.fetch_by_tag(t, tag)
         cls.query(t, cls.tag == tag).delete()
 
     @classmethod
-    def delete_by_uuid(cls, t: Transaction, uuid: UUID) -> None:
+    def delete_by_uuid(
+        cls, t: Transaction, uuid: UUID, *, check_existence: bool = True
+    ) -> None:
         """Delete the entry with the given UUID.
 
         Raise UnknownItemError if no entry with this UUID exists.
@@ -198,7 +209,8 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         For this method to work, the database table needs to have a
         numeric column named "uuid".
         """
-        cls.fetch_by_uuid(t, uuid)
+        if check_existence:
+            cls.fetch_by_uuid(t, uuid)
         cls.query(t, cls._uuid == str(uuid)).delete()
 
     def delete(self, t: Transaction) -> None:
