@@ -162,8 +162,8 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         conditions, delete an arbitrary entry. If it contains no matching
         entries, raise a UnknownItemError.
         """
-        o = cls.fetch_one(t, *conditions)
-        t.delete(o)
+        cls.fetch_one(t, *conditions)
+        cls.query(t, *conditions).delete()
 
     @classmethod
     def delete_by_id(cls, t: Transaction, id: int) -> None:
@@ -174,8 +174,8 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         For this method to work, the database table needs to have a
         numeric column named "id".
         """
-        item = cls.fetch_by_id(t, id)
-        item.delete(t)
+        cls.fetch_by_id(t, id)
+        cls.query(t, cls.id == id).delete()
 
     @classmethod
     def delete_by_tag(cls, t: Transaction, tag: str) -> None:
@@ -186,8 +186,8 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         For this method to work, the database table needs to have a
         string column named "tag".
         """
-        item = cls.fetch_by_tag(t, tag)
-        item.delete(t)
+        cls.fetch_by_tag(t, tag)
+        cls.query(t, cls.tag == tag).delete()
 
     @classmethod
     def delete_by_uuid(cls, t: Transaction, uuid: UUID) -> None:
@@ -198,8 +198,8 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         For this method to work, the database table needs to have a
         numeric column named "uuid".
         """
-        item = cls.fetch_by_uuid(t, uuid)
-        item.delete(t)
+        cls.fetch_by_uuid(t, uuid)
+        cls.query(t, cls._uuid == str(uuid)).delete()
 
     def delete(self, t: Transaction) -> None:
         """Delete this entry from the database."""

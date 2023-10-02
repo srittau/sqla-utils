@@ -1,5 +1,8 @@
 # Unreleased Changes
 
+- Fix a race condition when using `DBObjectBase.delete_one()` or one of the
+  `delete_by_*()` methods.
+
 # News in version 0.5.0
 
 - Make compatible with SQLAlchemy 2.0.
