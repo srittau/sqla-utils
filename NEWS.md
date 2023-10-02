@@ -1,3 +1,5 @@
+# Unreleased Changes
+
 # News in version 0.6.0
 
 - Add a `check_existence` argument to `DBObjectBase.delete_one()` and
