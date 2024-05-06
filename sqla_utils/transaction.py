@@ -58,8 +58,7 @@ class Transaction:
             self.session.commit()
 
     @overload
-    def query(self, entities: Table, **kwargs: Any) -> Query[Any]:
-        ...
+    def query(self, entities: Table, **kwargs: Any) -> Query[Any]: ...
 
     @overload  # noqa: F811
     def query(
@@ -70,14 +69,12 @@ class Transaction:
     @overload  # noqa: F811
     def query(  # type: ignore  # noqa: F811
         self, entities: ColumnElement[_T], **kwargs: Any
-    ) -> Query[tuple[_T]]:
-        ...
+    ) -> Query[tuple[_T]]: ...
 
     @overload  # noqa: F811
     def query(  # noqa: F811
         self, *entities: ColumnElement[_T], **kwargs: Any
-    ) -> Query[tuple[_T, ...]]:
-        ...
+    ) -> Query[tuple[_T, ...]]: ...
 
     def query(self, *entities: Any, **kwargs: Any) -> Any:  # noqa: F811
         """Wrapper around Session.query()."""
