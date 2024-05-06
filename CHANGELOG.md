@@ -4,6 +4,10 @@ SQLA Tools adheres to [semantic versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Support Python 3.12.
+
 ### Changed
 
 - `assert_rows_equal()`: Improve assertion message when the number of rows
