@@ -296,7 +296,9 @@ class DBFixture:
         fetched_rows = self.select_all_rows(table_name)
         if not fetched_rows and not expected_rows:
             return
-        assert len(fetched_rows) == len(expected_rows)
+        assert len(fetched_rows) == len(
+            expected_rows
+        ), f"expected {len(expected_rows)} rows, got {len(fetched_rows)}"
 
         def find_one(
             rs: Sequence[Row[_TP]], expected: Mapping[str, Any]

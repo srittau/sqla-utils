@@ -4,6 +4,11 @@ SQLA Tools adheres to [semantic versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- `assert_rows_equal()`: Improve assertion message when the number of rows
+  doesn't match.
+
 ## [0.6.0]
 
 - Add a `check_existence` argument to `DBObjectBase.delete_one()` and
