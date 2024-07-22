@@ -24,7 +24,7 @@ SQLAlchemy = ">= 1.4, < 3"
 black = "^24.4.2"
 flake8 = { version = "^7.0.0", python = ">= 3.8.1" }
 isort = "^5.9.2"
-mypy = "~1.10.0"
+mypy = ">=1.10,<1.12"
 pytest = "*"
 
 [tool.black]
