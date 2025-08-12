@@ -13,17 +13,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Install poetry
+        run: pipx install poetry
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
-          # We can't use `cache: poetry` here, due to
-          # <https://github.com/actions/setup-python/issues/369>.
-          cache: pip
-          cache-dependency-path: "**/poetry.lock"
-      - name: Install poetry
-        run: pip --disable-pip-version-check install -U poetry
+          cache: poetry
       - name: Install Python packages
         run: poetry install
       - name: Lint with flake8
@@ -49,17 +46,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Install poetry
+        run: pipx install poetry
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
-          # We can't use `cache: poetry` here, due to
-          # <https://github.com/actions/setup-python/issues/369>.
-          cache: pip
-          cache-dependency-path: "**/poetry.lock"
-      - name: Install poetry
-        run: pip --disable-pip-version-check install -U poetry
+          cache: poetry
       - name: Install Python packages
         run: |
           poetry install
