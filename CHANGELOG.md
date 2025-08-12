@@ -17,6 +17,10 @@ SQLA Tools adheres to [semantic versioning](https://semver.org/).
 
 - Remove support for Python 3.8.
 
+### Fixed
+
+- Correctly dispose of the engine when finalizing a `DBFixture`.
+
 ## [0.6.1] – 2024-06-06
 
 ### Added

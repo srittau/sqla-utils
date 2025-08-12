@@ -141,12 +141,14 @@ class DBFixture:
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
+        assert self.engine is not None
         assert self._session is not None
         assert self._connection is not None
         self._session.__exit__(exc_type, exc_val, exc_tb)
         self._session = None
         self._connection.close()
         self._connection = None
+        self.engine.dispose()
         self.engine = None
         if self._tmp_db is not None:
             os.remove(self._tmp_db)

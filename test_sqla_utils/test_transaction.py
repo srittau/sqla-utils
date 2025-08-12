@@ -12,8 +12,11 @@ from sqla_utils.transaction import Transaction
 @pytest.fixture
 def sa_session() -> Generator[Session, None, None]:
     engine = create_engine("sqlite:///:memory:")
-    with Session(engine) as session:
-        yield session
+    try:
+        with Session(engine) as session:
+            yield session
+    finally:
+        engine.dispose()
 
 
 def test_execute_textual_sql(sa_session: Session) -> None:
