@@ -1,6 +1,6 @@
 [project]
 name = "sqla-utils"
-version = "0.7.0.dev"
+version = "0.7.0"
 description = "Opinionated utilities for working with SQLAlchemy"
 readme = "README.md"
 keywords = ["sqlalchemy", "orm"]
