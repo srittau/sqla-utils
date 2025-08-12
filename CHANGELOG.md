@@ -7,6 +7,8 @@ SQLA Tools adheres to [semantic versioning](https://semver.org/).
 ### Added
 
 - Add support for Python 3.13 and 3.14.
+- Add special value `sqla_utils.test.NOT_NULL` for use with
+  `assert_row_equals()` and derived functions.
 
 ### Changes
 

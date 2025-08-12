@@ -27,23 +27,32 @@ _TP = TypeVar("_TP", bound="tuple[Any, ...]")
 
 _MEMORY_DB_URL = "sqlite:///:memory:"
 
+# Placeholder for any NOT NULL value.
+NOT_NULL = object()
 
-def assert_row_equals(
-    row: Row[Any], expected_values: Mapping[str, Any]
-) -> None:
+
+def assert_row_equals(row: Row[Any], expected_values: Mapping[str, Any]) -> None:
     """Assert that a row contains expected values.
 
     row is a mapping as returned from execute_sql_one_row() or
     fetch_only_row(). expected_values is a column name -> expected value
     mapping. The row may contain additional columns that are not listed
     in expected_values. Those are ignored.
+
+    The expected value may be NOT_NULL, in which case any value that is not
+    None (i.e. NULL in the database) is considered valid.
     """
 
     for column_name, expected in expected_values.items():
         column_value = row._mapping[column_name]
-        assert (
-            column_value == expected
-        ), f"column '{column_name}': {expected!r} != {column_value!r}"
+        if expected is NOT_NULL:
+            assert column_value is not None, (
+                f"column '{column_name}': expected NOT NULL, but was NULL"
+            )
+        else:
+            assert column_value == expected, (
+                f"column '{column_name}': {expected!r} != {column_value!r}"
+            )
 
 
 def assert_one_row_equals(
@@ -179,9 +188,7 @@ class DBFixture:
         with self.connection.begin():
             self._db_builder.require(*features)
 
-    def execute_sql(
-        self, query: str, args: Mapping[str, Any] | None = None
-    ) -> None:
+    def execute_sql(self, query: str, args: Mapping[str, Any] | None = None) -> None:
         """Execute a SQL query."""
         with self.connection.begin():
             if args is None:
@@ -228,8 +235,7 @@ class DBFixture:
         Raise an AssertionError if the table has zero or more than one row."""
         rows = self.select_all_rows(table_name)
         assert len(rows) == 1, (
-            f"expected exactly one row in table '{table_name}', "
-            f"got {len(rows)}"
+            f"expected exactly one row in table '{table_name}', got {len(rows)}"
         )
         return rows[0]
 
@@ -247,16 +253,14 @@ class DBFixture:
         """Assert that a table has no rows."""
         rows = self.select_all_rows(table_name)
         assert len(rows) == 0, (
-            f"table {table_name} contains {len(rows)} rows, "
-            "expected it to be empty"
+            f"table {table_name} contains {len(rows)} rows, expected it to be empty"
         )
 
     def assert_row_count(self, table_name: str, expected_rows: int) -> None:
         """Assert that a table has a certain amount of rows."""
         rows = self.select_all_rows(table_name)
         assert len(rows) == expected_rows, (
-            f"table {table_name} contains {len(rows)} rows, "
-            f"expected {expected_rows}"
+            f"table {table_name} contains {len(rows)} rows, expected {expected_rows}"
         )
 
     def assert_only_row_equals(
@@ -298,9 +302,9 @@ class DBFixture:
         fetched_rows = self.select_all_rows(table_name)
         if not fetched_rows and not expected_rows:
             return
-        assert len(fetched_rows) == len(
-            expected_rows
-        ), f"expected {len(expected_rows)} rows, got {len(fetched_rows)}"
+        assert len(fetched_rows) == len(expected_rows), (
+            f"expected {len(expected_rows)} rows, got {len(fetched_rows)}"
+        )
 
         def find_one(
             rs: Sequence[Row[_TP]], expected: Mapping[str, Any]

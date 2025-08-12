@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from sqla_utils.test import DBFixture
+from sqla_utils.test import NOT_NULL, DBFixture, assert_row_equals
 
 
 class ExampleFixture(DBFixture):
@@ -16,6 +16,15 @@ class ExampleFixture(DBFixture):
 def fix() -> Generator[ExampleFixture, None, None]:
     with ExampleFixture() as fixture:
         yield fixture
+
+
+class TestAssertRowEquals:
+    def test_not_null(self, fix: DBFixture) -> None:
+        row = fix.select_sql_one_row("SELECT 'foo' AS text, NULL AS n")
+        assert_row_equals(row, {"text": "foo", "n": None})
+        assert_row_equals(row, {"text": NOT_NULL})
+        with pytest.raises(AssertionError):
+            assert_row_equals(row, {"n": NOT_NULL})
 
 
 class TestDBFixture:
