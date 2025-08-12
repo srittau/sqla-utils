@@ -8,6 +8,11 @@ SQLA Tools adheres to [semantic versioning](https://semver.org/).
 
 - Add support for Python 3.13 and 3.14.
 
+### Changes
+
+- Replace poetry-specific fields in `pyproject.toml` with standard Python
+  fields.
+
 ### Removed
 
 - Remove support for Python 3.8.

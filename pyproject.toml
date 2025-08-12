@@ -1,24 +1,26 @@
-[tool.poetry]
+[project]
 name = "sqla-utils"
 version = "0.7.0.dev"
 description = "Opinionated utilities for working with SQLAlchemy"
 readme = "README.md"
 keywords = ["sqlalchemy", "orm"]
-authors = ["Sebastian Rittau <srittau@rittau.biz>"]
+authors = [{ name = "Sebastian Rittau", email = "srittau@rittau.biz" }]
 license = "MIT"
-homepage = "https://github.com/srittau/sqla-utils"
-repository = "https://github.com/srittau/sqla-utils"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "Topic :: Software Development",
     "Typing :: Typed",
 ]
-include = ["CHANGELOG.md", "*/py.typed"]
+requires-python = ">= 3.9, < 4"
+dependencies = ["SQLAlchemy >= 1.4, < 3"]
 
-[tool.poetry.dependencies]
-python = ">= 3.9, < 4"
-SQLAlchemy = ">= 1.4, < 3"
+[project.urls]
+Homepage = "https://github.com/srittau/sqla-utils"
+Repository = "https://github.com/srittau/sqla-utils"
+
+[tool.poetry]
+include = ["CHANGELOG.md", "*/py.typed"]
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.4.2"
