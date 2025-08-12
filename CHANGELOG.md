@@ -4,6 +4,10 @@ SQLA Tools adheres to [semantic versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Support for Python 3.13 and 3.14.
+
 ## [0.6.1] – 2024-06-06
 
 ### Added
