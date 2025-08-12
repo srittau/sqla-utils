@@ -23,9 +23,9 @@ Repository = "https://github.com/srittau/sqla-utils"
 include = ["CHANGELOG.md", "*/py.typed"]
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.4.2"
+black = "^25.1.0"
 flake8 = "^7.0.0"
-isort = "^5.9.2"
+isort = "^6.0.1"
 mypy = "~1.17.1"
 pytest = "*"
 
