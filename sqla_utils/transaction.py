@@ -67,7 +67,7 @@ class Transaction:
         ...
 
     @overload  # noqa: F811
-    def query(  # type: ignore  # noqa: F811
+    def query(  # noqa: F811
         self, entities: ColumnElement[_T], **kwargs: Any
     ) -> Query[tuple[_T]]: ...
 
