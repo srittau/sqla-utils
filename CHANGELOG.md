@@ -4,9 +4,17 @@ SQLA Tools adheres to [semantic versioning](https://semver.org/).
 
 ## [UNRELEASED]
 
-### Removed
+### Added
 
 - Add support for Python 3.15.
+
+### Changed
+
+- `DataItemError`, `UnknownItemError`, and `DuplicateItemError` are now generic
+  in the type of the value that caused the error.
+
+### Removed
+
 - Remove support for Python 3.9.
 - Drop support for SQLAlchemy 1.4.
 
@@ -18,7 +26,7 @@ SQLA Tools adheres to [semantic versioning](https://semver.org/).
 - Add special value `sqla_utils.test.NOT_NULL` for use with
   `assert_row_equals()` and derived functions.
 
-### Changes
+### Changed
 
 - Replace poetry-specific fields in `pyproject.toml` with standard Python
   fields.

@@ -1,18 +1,20 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Generic, TypeVar
+
+_V = TypeVar("_V")
 
 
 class DataError(Exception):
     """Base class for sqla-utils exceptions."""
 
 
-class DataItemError(DataError):
+class DataItemError(DataError, Generic[_V]):
     def __init__(
         self,
         item_type: str,
         field: str | None,
-        value: Any,
+        value: _V,
         *,
         msg: str,
     ) -> None:
@@ -22,7 +24,7 @@ class DataItemError(DataError):
         self.value = value
 
 
-class UnknownItemError(DataItemError):
+class UnknownItemError(DataItemError[_V | None], Generic[_V]):
     """An unknown item was queried.
 
     By default, a message a is generated from the supplied attributes, but
@@ -38,7 +40,7 @@ class UnknownItemError(DataItemError):
         self,
         item_type: str,
         field: str | None = None,
-        value: Any = None,
+        value: _V | None = None,
         *,
         msg: str | None = None,
     ) -> None:
@@ -49,7 +51,7 @@ class UnknownItemError(DataItemError):
         super().__init__(item_type, field, value, msg=msg)
 
 
-class DuplicateItemError(DataItemError):
+class DuplicateItemError(DataItemError[_V | None], Generic[_V]):
     """A item can't be created because it already exists.
 
     By default, a message a is generated from the supplied attributes, but
@@ -65,7 +67,7 @@ class DuplicateItemError(DataItemError):
         self,
         item_type: str,
         field: str | None = None,
-        value: Any = None,
+        value: _V | None = None,
         *,
         msg: str | None = None,
     ) -> None:
