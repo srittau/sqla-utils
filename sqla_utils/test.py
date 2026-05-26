@@ -31,7 +31,9 @@ _MEMORY_DB_URL = "sqlite:///:memory:"
 NOT_NULL = object()
 
 
-def assert_row_equals(row: Row[Any], expected_values: Mapping[str, Any]) -> None:
+def assert_row_equals(
+    row: Row[Any], expected_values: Mapping[str, Any]
+) -> None:
     """Assert that a row contains expected values.
 
     row is a mapping as returned from execute_sql_one_row() or
@@ -188,7 +190,9 @@ class DBFixture:
         with self.connection.begin():
             self._db_builder.require(*features)
 
-    def execute_sql(self, query: str, args: Mapping[str, Any] | None = None) -> None:
+    def execute_sql(
+        self, query: str, args: Mapping[str, Any] | None = None
+    ) -> None:
         """Execute a SQL query."""
         with self.connection.begin():
             if args is None:

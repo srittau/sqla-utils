@@ -18,11 +18,9 @@ dependencies = ["SQLAlchemy >= 1.4, < 3"]
 
 [dependency-groups]
 dev = [
-    "black >= 25.11.0, < 26",
-    "flake8 >= 7.0.0, < 8",
-    "isort >= 6.1.0, < 7",
     "mypy >= 1.19.1, < 2",
     "pytest",
+    "ruff>=0.15.13",
 ]
 
 [project.urls]
@@ -36,13 +34,14 @@ exclude-newer = "5 days"
 module-root = ""
 source-include = ["CHANGELOG.md"]
 
-[tool.black]
-target-version = ["py38"]
+[tool.ruff]
 line-length = 79
 
-[tool.isort]
-profile = "black"
-combine_as_imports = true
+[tool.ruff.lint]
+select = ["E", "F", "B", "I"]
+# B006: Do not use mutable default arguments
+# E501: Line too long (handled by the autoformatter)
+ignore = ["B006", "E501"]
 
 [tool.pytest.ini_options]
 filterwarnings = ["error"]

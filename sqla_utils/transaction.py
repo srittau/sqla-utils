@@ -61,9 +61,7 @@ class Transaction:
     def query(self, entities: Table, **kwargs: Any) -> Query[Any]: ...
 
     @overload  # noqa: F811
-    def query(
-        self, *entities: type[_T], **kwargs: Any
-    ) -> Query[_T]:  # noqa: F811
+    def query(self, *entities: type[_T], **kwargs: Any) -> Query[_T]:  # noqa: F811
         ...
 
     @overload  # noqa: F811

@@ -28,7 +28,7 @@ class _SQLSplitter:
         self._line = ""
 
     def split(self) -> Iterator[str]:
-        for self._line in self._stream:
+        for self._line in self._stream:  # noqa: B020
             yield from self._parse_line()
         if self._current_stmt.strip():
             yield self._current_stmt.strip()

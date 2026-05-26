@@ -19,10 +19,10 @@ jobs:
             python-version: ${{ matrix.python-version }}
       - name: Install Python packages
         run: uv sync --locked
-      - name: Lint with flake8
+      - name: Lint with ruff
         run: |
-          uv run flake8 --version
-          uv run flake8 --show-source --statistics sqla_utils test_sqla_utils
+          uv run ruff --version
+          uv run ruff check sqla_utils test_sqla_utils
       - name: Type checking with mypy
         run: |
           uv run mypy --version
