@@ -6,8 +6,11 @@ updates:
     schedule:
       interval: weekly
       time: '04:00'
+    cooldown:
+      default-days: 5
     groups:
       dependencies:
+        applies-to: version-updates
         exclude-patterns:
           - "mypy"
           - "types-*"
@@ -15,9 +18,11 @@ updates:
           - "minor"
           - "patch"
       mypy:
+        applies-to: version-updates
         patterns:
           - "mypy"
       types:
+        applies-to: version-updates
         patterns:
           - "types-*"
 
@@ -26,3 +31,5 @@ updates:
     schedule:
       interval: weekly
       time: '04:00'
+    cooldown:
+      default-days: 5
