@@ -4,10 +4,10 @@ import re
 from collections.abc import Callable, Iterable
 from os import PathLike
 from pathlib import Path
+from typing import TypeAlias
 
 from sqlalchemy import text
 from sqlalchemy.sql.elements import TextClause
-from typing_extensions import TypeAlias
 
 from .split_sql import split_sql
 
@@ -19,7 +19,7 @@ class DependencyLoopError(Exception):
 
 
 class DatabaseBuilder:
-    """Automatic SQL database builder.
+    r"""Automatic SQL database builder.
 
     Apply select SQL scripts from a given directory to the given SQL engine.
 
@@ -31,7 +31,7 @@ class DatabaseBuilder:
     ...
     >>> engine = MyEngine()
     >>> f = open("feature1.sql", "w")
-    >>> f.write("-- Require: feature2\\n\\nSELECT * FROM feature1;")
+    >>> f.write("-- Require: feature2\n\nSELECT * FROM feature1;")
     >>> f.close()
     >>> f = open("feature2.sql", "w")
     >>> f.write("SELECT * FROM feature2;")
@@ -67,10 +67,10 @@ class DatabaseBuilder:
         self._parsing.append(requirement)
         try:
             req_file = self._path / (requirement + ".sql")
-            with open(req_file) as f:
+            with req_file.open() as f:
                 headers = _parse_sql_headers(f)
                 self._add_requires(headers.get("require", ""))
-            with open(req_file) as f:
+            with req_file.open() as f:
                 _execute_sql_stream(self._executor, f)
         finally:
             self._parsing.pop()
@@ -99,5 +99,5 @@ def _parse_sql_headers(stream: Iterable[str]) -> dict[str, str]:
 def _execute_sql_stream(executor: SQLExecutor, stream: Iterable[str]) -> None:
     """Run the SQL statements in a stream against a database."""
     for query in split_sql(stream):
-        query = query.replace(":", "\\:")
-        executor(text(query))
+        escaped_query = query.replace(":", "\\:")
+        executor(text(escaped_query))

@@ -17,11 +17,7 @@ requires-python = ">= 3.10"
 dependencies = ["SQLAlchemy >= 1.4, < 3"]
 
 [dependency-groups]
-dev = [
-    "mypy >= 2.1.0",
-    "pytest",
-    "ruff>=0.15.13",
-]
+dev = ["mypy >= 2.1.0", "pytest", "ruff>=0.15.13"]
 
 [project.urls]
 Homepage = "https://github.com/srittau/sqla-utils"
@@ -38,10 +34,38 @@ source-include = ["CHANGELOG.md"]
 line-length = 79
 
 [tool.ruff.lint]
-select = ["E", "F", "B", "I"]
-# B006: Do not use mutable default arguments
-# E501: Line too long (handled by the autoformatter)
-ignore = ["B006", "E501"]
+select = ["ALL"]
+ignore = [
+    "ANN401",  # Using Any (FIXME: should be enabled)
+    "COM812",  # Missing trailing comma (handled by the autoformatter)
+    "D100",    # Missing docstring in public module (FIXME: should be enabled)
+    "D101",    # Missing docstring in public class (FIXME: should be enabled)
+    "D102",    # Missing docstring in public method (FIXME: should be enabled)
+    "D103",    # Missing docstring in public function (FIXME: should be enabled)
+    "D104",    # Missing docstring in public package (FIXME: should be enabled)
+    "D105",    # Missing docstring in magic method (often not necessary)
+    "D107",    # Missing docstring in __init__ method (FIXME: should be enabled)
+    "D202",    # No blank lines allowed after function docstring (often less readable)
+    "D203",    # Incompatible with D211, and not recommended anymore
+    "D213",    # Incompatible with D212
+    "E501",    # Line too long (handled by the autoformatter)
+    "EM101",   # Exception must not use a string literal (nonsense rule)
+    "EM102",   # Exception must not use an f-string (nonsense rule)
+    "PERF203", # try within a loop (often necessary)
+    "RET505",  # Unnecessary else after a return statement (often more readable when returning from all branches)
+    "S101",    # Use of assert detected (assert is often useful, and necessary in tests)
+    "TC001",   # Move import into type-checking block (often less readable)
+    "TC002",
+    "TC003",
+    "TRY003",  # Long message outside exception class (nonsense rule)
+]
+flake8-builtins.ignorelist = [
+    "id", # "id" is a commonly useful, builtin is rarely used
+]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+extra-standard-library = ["typing_extensions", "_typeshed"]
 
 [tool.pytest.ini_options]
 filterwarnings = ["error"]

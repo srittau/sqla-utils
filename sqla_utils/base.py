@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, TypeVar
+from typing import Any
+from typing_extensions import Self
 from uuid import UUID
 
 from sqlalchemy import Table
@@ -9,12 +10,10 @@ from sqlalchemy.orm import Query, declarative_base
 from .exc import UnknownItemError
 from .transaction import Transaction
 
-_DB = TypeVar("_DB", bound="DBObjectBase")
-
 _DeclarativeBase = declarative_base()
 
 
-class DBObjectBase(_DeclarativeBase):  # type: ignore
+class DBObjectBase(_DeclarativeBase):  # type: ignore[valid-type, misc]
     """Base class for mapped classes.
 
     Each non-abstract sub-class must provide a __tablename__
@@ -41,11 +40,11 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
 
     @classmethod
     def query(
-        cls: type[_DB],
+        cls,
         t: Transaction,
         *conditions: Any,
         order_by: Any | None = None,
-    ) -> Query[_DB]:
+    ) -> Query[Self]:
         """Return an SQLAlchemy query for a list of database entries.
 
         Return a query for all entries of this class's table by default,
@@ -67,30 +66,30 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
 
     @classmethod
     def first(
-        cls: type[_DB],
-        query: Query[_DB],
+        cls,
+        query: Query[Self],
         *,
         field: str | None = None,
         value: Any = None,
-    ) -> _DB:
+    ) -> Self:
         """Return a single entry from a query.
 
         If the database contains multiple entries that match the given
         conditions, return an arbitrary entry. If it contains no matching
         entries, raise a UnknownItemError.
         """
-        o: _DB | None = query.first()
+        o = query.first()
         if o is None:
             raise UnknownItemError(cls.item_type(), field, value)
         return o
 
     @classmethod
     def fetch_all(
-        cls: type[_DB],
+        cls,
         t: Transaction,
         *conditions: Any,
         order_by: Any | None = None,
-    ) -> list[_DB]:
+    ) -> list[Self]:
         """Return an a list of entries from the database.
 
         Return all entries of this class's table by default, but the
@@ -100,13 +99,13 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
 
     @classmethod
     def fetch_one(
-        cls: type[_DB],
+        cls,
         t: Transaction,
         *conditions: Any,
         order_by: Any | None = None,
         field: str | None = None,
         value: Any = None,
-    ) -> _DB:
+    ) -> Self:
         """Return a single entry from the database.
 
         If the database contains no matching entries, raise an
@@ -118,7 +117,7 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         return cls.first(q, field=field, value=value)
 
     @classmethod
-    def fetch_by_id(cls: type[_DB], t: Transaction, id: int) -> _DB:
+    def fetch_by_id(cls, t: Transaction, id: int) -> Self:
         """Return the database entry with the given id.
 
         For this method to work, the database table needs to have a
@@ -127,7 +126,7 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         return cls.fetch_one(t, cls.id == id, field="id", value=id)
 
     @classmethod
-    def fetch_by_tag(cls: type[_DB], t: Transaction, tag: str) -> _DB:
+    def fetch_by_tag(cls, t: Transaction, tag: str) -> Self:
         """Return the database entry with the given tag.
 
         For this method to work, the database table needs to have a
@@ -136,7 +135,7 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore
         return cls.fetch_one(t, cls.tag == tag, field="tag", value=tag)
 
     @classmethod
-    def fetch_by_uuid(cls: type[_DB], t: Transaction, uuid: UUID) -> _DB:
+    def fetch_by_uuid(cls, t: Transaction, uuid: UUID) -> Self:
         """Return the database entry with the given UUID.
 
         For this method to work, the database table needs to have a

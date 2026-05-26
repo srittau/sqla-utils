@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from types import TracebackType
+from typing_extensions import Self
 
 from sqlalchemy.orm.session import Session as SASession
 
@@ -21,7 +22,7 @@ class Session:
         self._session: SASession | None = None
         self._transaction: Transaction | None = None
 
-    def __enter__(self) -> Session:
+    def __enter__(self) -> Self:
         if self._session:
             raise RuntimeError("session already entered")
         self._session = self._session_maker()

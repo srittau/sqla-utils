@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from typing import Generator, Iterable, Iterator
+from collections.abc import Generator, Iterable, Iterator
 
 _SQL_COMMENT_START = "--"
 _SQL_STRING_DELIMITER = "'"

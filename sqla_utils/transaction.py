@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from types import TracebackType
 from typing import TYPE_CHECKING, Any, TypeVar, overload
+from typing_extensions import Self
 
 from sqlalchemy import text
 from sqlalchemy.engine import Connection, Result
@@ -17,7 +18,6 @@ if TYPE_CHECKING:
 
 
 _T = TypeVar("_T")
-_TA = TypeVar("_TA", bound="Transaction")
 
 
 class Transaction:
@@ -38,7 +38,7 @@ class Transaction:
     def connection(self) -> Connection:
         return self.session.connection()
 
-    def __enter__(self: _TA) -> _TA:
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(
@@ -60,22 +60,24 @@ class Transaction:
     @overload
     def query(self, entities: Table, **kwargs: Any) -> Query[Any]: ...
 
-    @overload  # noqa: F811
-    def query(self, *entities: type[_T], **kwargs: Any) -> Query[_T]:  # noqa: F811
-        ...
+    @overload
+    def query(self, *entities: type[_T], **kwargs: Any) -> Query[_T]: ...
 
-    @overload  # noqa: F811
-    def query(  # noqa: F811
+    @overload
+    def query(
         self, entities: ColumnElement[_T], **kwargs: Any
     ) -> Query[tuple[_T]]: ...
 
-    @overload  # noqa: F811
-    def query(  # noqa: F811
+    @overload
+    def query(
         self, *entities: ColumnElement[_T], **kwargs: Any
     ) -> Query[tuple[_T, ...]]: ...
 
-    def query(self, *entities: Any, **kwargs: Any) -> Any:  # noqa: F811
-        """Wrapper around Session.query()."""
+    def query(self, *entities: Any, **kwargs: Any) -> Any:
+        """Execute a query against the database.
+
+        Simple wrapper around Session.query().
+        """
         return self.session.query(*entities, **kwargs)
 
     def add(self, *instances: Any) -> None:
@@ -102,7 +104,9 @@ class Transaction:
             self.session.flush(objects)
 
     def refresh(self, *instances: Any) -> None:
-        """Wrapper around Session.refresh.
+        """Refresh instances from the database.
+
+        Wrapper around Session.refresh.
 
         Can be called with multiple instances.
         """
@@ -110,7 +114,10 @@ class Transaction:
             self.session.refresh(instance)
 
     def expire_all(self) -> None:
-        """Wrapper around Session.expire_all()."""
+        """Expire all instances in the session.
+
+        Wrapper around Session.expire_all().
+        """
         self.session.expire_all()
 
     def execute(
@@ -118,7 +125,10 @@ class Transaction:
         query: Any,
         args: _CoreAnyExecuteParams | None = None,
     ) -> Result[tuple[Any, ...]]:
-        """Wrapper around Session.execute()."""
+        """Execute a query against the database.
+
+        Wrapper around Session.execute().
+        """
         if isinstance(query, str):
             query = text(query)
         result: Result[tuple[Any, ...]] = self.session.execute(query, args)
@@ -129,7 +139,10 @@ class Transaction:
         query: Any,
         params: _CoreSingleExecuteParams | None = None,
     ) -> Any:
-        """Wrapper around Session.scalar()."""
+        """Execute a query and return a single scalar result.
+
+        Wrapper around Session.scalar().
+        """
         if isinstance(query, str):
             query = text(query)
         return self.session.scalar(query, params)

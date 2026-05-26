@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import os
 import shutil
+from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from tempfile import mkstemp
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, Iterable, Mapping, Sequence, TypeVar
+from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
+from typing_extensions import Self
 
 import pytest
 from sqlalchemy import text
@@ -22,7 +24,6 @@ from .session import Session
 if TYPE_CHECKING:
     from sqlalchemy.sql._typing import _DMLColumnArgument
 
-_S = TypeVar("_S", bound="DBFixture")
 _TP = TypeVar("_TP", bound="tuple[Any, ...]")
 
 _MEMORY_DB_URL = "sqlite:///:memory:"
@@ -46,7 +47,7 @@ def assert_row_equals(
     """
 
     for column_name, expected in expected_values.items():
-        column_value = row._mapping[column_name]
+        column_value = row._mapping[column_name]  # noqa: SLF001
         if expected is NOT_NULL:
             assert column_value is not None, (
                 f"column '{column_name}': expected NOT NULL, but was NULL"
@@ -114,10 +115,10 @@ class DBFixture:
         ...         return id
     """
 
-    __metadata__: MetaData = MetaData()
-    sql_path: Path | None = None
-    db_path: Path | None = None
-    requirements: list[str] = []
+    __metadata__: ClassVar[MetaData] = MetaData()
+    sql_path: ClassVar[Path | None] = None
+    db_path: ClassVar[Path | None] = None
+    requirements: ClassVar[list[str]] = []
 
     def __init__(self) -> None:
         if self.sql_path is None and self.db_path is None:
@@ -130,7 +131,7 @@ class DBFixture:
         self._db_builder: DatabaseBuilder | None = None
         self._session: Session | None = None
 
-    def __enter__(self: _S) -> _S:
+    def __enter__(self) -> Self:
         if self.db_path is not None:
             self._tmp_db = _copy_database(self.db_path)
         self.engine = create_engine(self.db_url)
@@ -162,7 +163,7 @@ class DBFixture:
         self.engine.dispose()
         self.engine = None
         if self._tmp_db is not None:
-            os.remove(self._tmp_db)
+            self._tmp_db.unlink()
             self._tmp_db = None
 
     @property
@@ -236,7 +237,8 @@ class DBFixture:
     def select_only_row(self, table_name: str) -> Row[Any]:
         """Return the only row from a table.
 
-        Raise an AssertionError if the table has zero or more than one row."""
+        Raise an AssertionError if the table has zero or more than one row.
+        """
         rows = self.select_all_rows(table_name)
         assert len(rows) == 1, (
             f"expected exactly one row in table '{table_name}', got {len(rows)}"
@@ -329,7 +331,6 @@ class DBFixture:
 
 def _copy_database(path: Path) -> Path:
     fd, name = mkstemp(".sqlite", "test-")
-    with os.fdopen(fd, "wb") as dst:
-        with open(path, "rb") as src:
-            shutil.copyfileobj(src, dst)
+    with os.fdopen(fd, "wb") as dst, path.open("rb") as src:
+        shutil.copyfileobj(src, dst)
     return Path(name)
