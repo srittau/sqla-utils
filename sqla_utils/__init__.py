@@ -1,3 +1,5 @@
+"""Opinionated SQLAlchemy utilities."""
+
 from .base import DBObjectBase as DBObjectBase
 from .exc import (
     DataError as DataError,

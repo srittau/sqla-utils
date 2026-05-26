@@ -37,13 +37,7 @@ line-length = 79
 select = ["ALL"]
 ignore = [
     "COM812",  # Missing trailing comma (handled by the autoformatter)
-    "D100",    # Missing docstring in public module (FIXME: should be enabled)
-    "D101",    # Missing docstring in public class (FIXME: should be enabled)
-    "D102",    # Missing docstring in public method (FIXME: should be enabled)
-    "D103",    # Missing docstring in public function (FIXME: should be enabled)
-    "D104",    # Missing docstring in public package (FIXME: should be enabled)
     "D105",    # Missing docstring in magic method (often not necessary)
-    "D107",    # Missing docstring in __init__ method (FIXME: should be enabled)
     "D202",    # No blank lines allowed after function docstring (often less readable)
     "D203",    # Incompatible with D211, and not recommended anymore
     "D213",    # Incompatible with D212
@@ -61,6 +55,9 @@ ignore = [
 flake8-builtins.ignorelist = [
     "id", # "id" is a commonly useful, builtin is rarely used
 ]
+
+[tool.ruff.lint.per-file-ignores]
+"test_sqla_utils/**.py" = ["D10"]
 
 [tool.ruff.lint.isort]
 combine-as-imports = true

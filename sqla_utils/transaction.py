@@ -36,10 +36,12 @@ class Transaction:
     """
 
     def __init__(self, session: Session) -> None:
+        """Create a new transaction for a session."""
         self.session = session
 
     @property
     def connection(self) -> Connection:
+        """Return the connection for this transaction."""
         return self.session.connection()
 
     def __enter__(self) -> Self:

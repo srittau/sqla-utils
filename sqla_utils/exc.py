@@ -1,3 +1,5 @@
+"""Exception classes for sqla-utils."""
+
 from __future__ import annotations
 
 from typing import Generic, TypeVar
@@ -10,6 +12,8 @@ class DataError(Exception):
 
 
 class DataItemError(DataError, Generic[_V]):
+    """Base class for sqla-utils exceptions related to a specific item."""
+
     def __init__(
         self,
         item_type: str,
@@ -18,6 +22,7 @@ class DataItemError(DataError, Generic[_V]):
         *,
         msg: str,
     ) -> None:
+        """Create a new data item error."""
         super().__init__(msg)
         self.item_type = item_type
         self.field = field
@@ -44,6 +49,7 @@ class UnknownItemError(DataItemError[_V | None], Generic[_V]):
         *,
         msg: str | None = None,
     ) -> None:
+        """Create a new unknown item error."""
         if msg is None:
             msg = f"unknown '{item_type}' item"
             if field:
@@ -71,6 +77,7 @@ class DuplicateItemError(DataItemError[_V | None], Generic[_V]):
         *,
         msg: str | None = None,
     ) -> None:
+        """Create a new duplicate item error."""
         if msg is None:
             msg = f"duplicate '{item_type}' item"
             if field:

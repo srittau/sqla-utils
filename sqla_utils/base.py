@@ -1,3 +1,5 @@
+"""Base class for SQLAlchemy mapped classes."""
+
 # ruff: noqa: ANN401 (FIXME)
 
 from __future__ import annotations

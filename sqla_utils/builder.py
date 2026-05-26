@@ -1,3 +1,5 @@
+"""Database builder for SQLAlchemy."""
+
 from __future__ import annotations
 
 import re
@@ -15,7 +17,13 @@ SQLExecutor: TypeAlias = "Callable[[TextClause], object]"
 
 
 class DependencyLoopError(Exception):
-    pass
+    """Raised when a dependency loop is detected in SQL script requirements."""
+
+    def __init__(self, requirement: str) -> None:
+        """Create a new dependency loop error."""
+        super().__init__(
+            f"Dependency loop detected for requirement: {requirement}"
+        )
 
 
 class DatabaseBuilder:
@@ -48,18 +56,18 @@ class DatabaseBuilder:
     def __init__(
         self, executor: SQLExecutor, path: PathLike[str] | str
     ) -> None:
+        """Create a new database builder."""
         self._executor = executor
         self._path = Path(path)
         self._parsed: set[str] = set()
         self._parsing: list[str] = []
 
     def require(self, *requirements: str) -> None:
+        """Require SQL features from the database builder."""
         for requirement in requirements:
             if requirement not in self._parsed:
                 if requirement in self._parsing:
-                    raise DependencyLoopError(
-                        "dependency loop: " + requirement
-                    )
+                    raise DependencyLoopError(requirement)
                 self._require_one(requirement)
                 self._parsed.add(requirement)
 

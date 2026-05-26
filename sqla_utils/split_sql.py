@@ -1,3 +1,5 @@
+"""Utility to split a stream of SQL statements into individual statements."""
+
 from __future__ import annotations
 
 import re

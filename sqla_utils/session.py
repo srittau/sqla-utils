@@ -1,3 +1,5 @@
+"""Session management utilities for SQLAlchemy."""
+
 from __future__ import annotations
 
 from collections.abc import Callable
@@ -18,6 +20,7 @@ class Session:
     """
 
     def __init__(self, session_maker: Callable[[], SASession]) -> None:
+        """Create a new session wrapper."""
         self._session_maker = session_maker
         self._session: SASession | None = None
         self._transaction: Transaction | None = None

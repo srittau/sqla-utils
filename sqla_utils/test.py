@@ -121,6 +121,7 @@ class DBFixture:
     requirements: ClassVar[list[str]] = []
 
     def __init__(self) -> None:
+        """Create a new database fixture."""
         if self.sql_path is None and self.db_path is None:
             raise RuntimeError("either of sql_path or db_path must be set")
         if self.sql_path is not None and self.db_path is not None:
@@ -168,6 +169,7 @@ class DBFixture:
 
     @property
     def db_url(self) -> str:
+        """Return the database URL to connect to the database."""
         if self._tmp_db is not None:
             return f"sqlite:///{self._tmp_db}"
         else:
@@ -175,17 +177,30 @@ class DBFixture:
 
     @property
     def connection(self) -> Connection:
+        """Return the connection for the database.
+
+        Raise a RuntimeError if the connection is not available, i.e. if
+        __enter__() has not been called yet or if __exit__() has already been
+        called.
+        """
         if self._connection is None:
             raise RuntimeError("call __enter__() before accessing connection")
         return self._connection
 
     @property
     def session(self) -> Session:
+        """Return the current database session.
+
+        Raise a RuntimeError if the session is not available, i.e. if
+        __enter__() has not been called yet or if __exit__() has already been
+        called.
+        """
         if self._session is None:
             raise RuntimeError("call __enter__() before accessing session")
         return self._session
 
     def require(self, *features: str) -> None:
+        """Require SQL features from the database builder."""
         if self._db_builder is None:
             raise RuntimeError("SQL database not built dynamically")
         with self.connection.begin():
