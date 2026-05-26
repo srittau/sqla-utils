@@ -13,28 +13,24 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-      - name: Install poetry
-        run: pipx install poetry
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+      - uses: astral-sh/setup-uv@v7
+        name: Install uv
         with:
-          python-version: ${{ matrix.python-version }}
-          allow-prereleases: true
-          cache: poetry
+            python-version: ${{ matrix.python-version }}
       - name: Install Python packages
-        run: poetry install
+        run: uv sync --locked
       - name: Lint with flake8
         run: |
-          poetry run flake8 --version
-          poetry run flake8 --show-source --statistics sqla_utils test_sqla_utils
+          uv run flake8 --version
+          uv run flake8 --show-source --statistics sqla_utils test_sqla_utils
       - name: Type checking with mypy
         run: |
-          poetry run mypy --version
-          poetry run mypy sqla_utils test_sqla_utils
+          uv run mypy --version
+          uv run mypy sqla_utils test_sqla_utils
       - name: Test with pytest
         env:
           SQLALCHEMY_WARN_20: 1
-        run: poetry run pytest
+        run: uv run pytest
 
   test14:
     name: Run tests against SQLAlchemy 1.4
@@ -46,19 +42,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-      - name: Install poetry
-        run: pipx install poetry
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+      - uses: astral-sh/setup-uv@v7
+        name: Install uv
         with:
-          python-version: ${{ matrix.python-version }}
-          allow-prereleases: true
-          cache: poetry
+            python-version: ${{ matrix.python-version }}
       - name: Install Python packages
         run: |
-          poetry install
-          poetry add SQLAlchemy==^1.4
+          uv sync
+          uv add SQLAlchemy==^1.4
       - name: Test with pytest
         env:
           SQLALCHEMY_WARN_20: 1
-        run: poetry run pytest
+        run: uv run pytest
