@@ -7,7 +7,7 @@ resolution-markers = [
 ]
 
 [options]
-exclude-newer = "2026-05-21T10:25:36.957281085Z"
+exclude-newer = "2026-05-21T10:58:58.823888736Z"
 exclude-newer-span = "P5D"
 
 [[package]]
@@ -403,7 +403,7 @@ requires-dist = [{ name = "sqlalchemy", specifier = ">=2.0,<3" }]
 [package.metadata.requires-dev]
 dev = [
     { name = "mypy", specifier = ">=2.1.0" },
-    { name = "pytest" },
+    { name = "pytest", specifier = ">=9.0.0" },
     { name = "ruff", specifier = ">=0.15.13" },
 ]
 
