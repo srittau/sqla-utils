@@ -67,7 +67,7 @@ flake8-builtins.ignorelist = [
 combine-as-imports = true
 extra-standard-library = ["typing_extensions", "_typeshed"]
 
-[tool.pytest.ini_options]
+[tool.pytest]
 filterwarnings = ["error"]
 
 [tool.mypy]
