@@ -4,7 +4,7 @@ version = "0.7.1.dev"
 description = "Opinionated utilities for working with SQLAlchemy"
 readme = "README.md"
 keywords = ["sqlalchemy", "orm"]
-authors = [{ name = "Sebastian Rittau", email = "srittau@rittau.biz" }]
+authors = [{ name = "Sebastian Rittau", email = "sebastian.rittau@zfutura.de" }]
 license = "MIT"
 license-files = ["LICENSE"]
 classifiers = [
