@@ -36,7 +36,6 @@ line-length = 79
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-    "ANN401",  # Using Any (FIXME: should be enabled)
     "COM812",  # Missing trailing comma (handled by the autoformatter)
     "D100",    # Missing docstring in public module (FIXME: should be enabled)
     "D101",    # Missing docstring in public class (FIXME: should be enabled)

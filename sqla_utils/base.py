@@ -1,6 +1,8 @@
+# ruff: noqa: ANN401 (FIXME)
+
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from typing_extensions import Self
 from uuid import UUID
 
@@ -9,6 +11,9 @@ from sqlalchemy.orm import Query, declarative_base
 
 from .exc import UnknownItemError
 from .transaction import Transaction
+
+if TYPE_CHECKING:
+    from sqlalchemy.sql._typing import _ColumnExpressionOrStrLabelArgument
 
 _DeclarativeBase = declarative_base()
 
@@ -43,7 +48,7 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore[valid-type, misc]
         cls,
         t: Transaction,
         *conditions: Any,
-        order_by: Any | None = None,
+        order_by: _ColumnExpressionOrStrLabelArgument[Any] | None = None,
     ) -> Query[Self]:
         """Return an SQLAlchemy query for a list of database entries.
 
@@ -88,7 +93,7 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore[valid-type, misc]
         cls,
         t: Transaction,
         *conditions: Any,
-        order_by: Any | None = None,
+        order_by: _ColumnExpressionOrStrLabelArgument[Any] | None = None,
     ) -> list[Self]:
         """Return an a list of entries from the database.
 
@@ -102,7 +107,7 @@ class DBObjectBase(_DeclarativeBase):  # type: ignore[valid-type, misc]
         cls,
         t: Transaction,
         *conditions: Any,
-        order_by: Any | None = None,
+        order_by: _ColumnExpressionOrStrLabelArgument[Any] | None = None,
         field: str | None = None,
         value: Any = None,
     ) -> Self:

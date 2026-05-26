@@ -1,3 +1,7 @@
+"""Transaction management utilities for SQLAlchemy."""
+
+# ruff: noqa: ANN401 (FIXME)
+
 from __future__ import annotations
 
 from types import TracebackType

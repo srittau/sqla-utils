@@ -12,6 +12,7 @@ SQLA Tools adheres to [semantic versioning](https://semver.org/).
 
 - `DataItemError`, `UnknownItemError`, and `DuplicateItemError` are now generic
   in the type of the value that caused the error.
+- More precise typing for `order_by` clauses.
 
 ### Removed
 
