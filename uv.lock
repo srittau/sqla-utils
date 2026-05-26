@@ -7,7 +7,7 @@ resolution-markers = [
 ]
 
 [options]
-exclude-newer = "2026-05-21T09:33:20.525784354Z"
+exclude-newer = "2026-05-21T10:25:36.957281085Z"
 exclude-newer-span = "P5D"
 
 [[package]]
@@ -398,7 +398,7 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "sqlalchemy", specifier = ">=1.4,<3" }]
+requires-dist = [{ name = "sqlalchemy", specifier = ">=2.0,<3" }]
 
 [package.metadata.requires-dev]
 dev = [
