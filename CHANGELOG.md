@@ -2,7 +2,9 @@
 
 SQLA Tools adheres to [semantic versioning](https://semver.org/).
 
-## [UNRELEASED]
+## Unreleased
+
+## [0.8.0] – 2026-06-25
 
 ### Added
 
