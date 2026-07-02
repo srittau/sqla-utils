@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Generic, TypeVar
 
-_V = TypeVar("_V")
+_V = TypeVar("_V", default=object)
 
 
 class DataError(Exception):

@@ -7,6 +7,7 @@ SQLA Tools adheres to [semantic versioning](https://semver.org/).
 ### Fixed
 
 - `sqla_utils.types.Row` was not properly declared as generic.
+- Add a default to `DataItemError`'s value type variable.
 
 ## [0.8.0] – 2026-06-25
 
