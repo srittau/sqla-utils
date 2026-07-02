@@ -7,7 +7,7 @@ resolution-markers = [
 ]
 
 [options]
-exclude-newer = "2026-06-20T20:25:42.188363866Z"
+exclude-newer = "2026-06-27T15:13:53.232973434Z"
 exclude-newer-span = "P5D"
 
 [[package]]
@@ -388,6 +388,7 @@ version = "0.8.1.dev0"
 source = { editable = "." }
 dependencies = [
     { name = "sqlalchemy" },
+    { name = "typing-extensions" },
 ]
 
 [package.dev-dependencies]
@@ -398,7 +399,10 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "sqlalchemy", specifier = ">=2.0,<3" }]
+requires-dist = [
+    { name = "sqlalchemy", specifier = ">=2.0,<3" },
+    { name = "typing-extensions", specifier = ">=4.15.0" },
+]
 
 [package.metadata.requires-dev]
 dev = [

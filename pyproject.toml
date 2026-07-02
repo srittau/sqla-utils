@@ -14,7 +14,7 @@ classifiers = [
     "Typing :: Typed",
 ]
 requires-python = ">= 3.10"
-dependencies = ["SQLAlchemy >= 2.0, < 3"]
+dependencies = ["SQLAlchemy >= 2.0, < 3", "typing-extensions>=4.15.0"]
 
 [dependency-groups]
 dev = ["mypy>=2.1.0", "pytest>=9.0.0", "ruff>=0.15.13"]

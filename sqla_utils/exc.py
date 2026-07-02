@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Generic, TypeVar
+from typing import Generic
+from typing_extensions import TypeVar
 
 _V = TypeVar("_V", default=object)
 
