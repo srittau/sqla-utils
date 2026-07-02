@@ -4,6 +4,10 @@ SQLA Tools adheres to [semantic versioning](https://semver.org/).
 
 ## Unreleased
 
+### Fixed
+
+- `sqla_utils.types.Row` was not properly declared as generic.
+
 ## [0.8.0] – 2026-06-25
 
 ### Added
