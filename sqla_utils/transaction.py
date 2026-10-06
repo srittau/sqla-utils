@@ -5,8 +5,7 @@
 from __future__ import annotations
 
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, TypeVar, overload
-from typing_extensions import Self
+from typing import TYPE_CHECKING, Any, Self, TypeVar, overload
 
 from sqlalchemy import text
 from sqlalchemy.engine import Connection, Result

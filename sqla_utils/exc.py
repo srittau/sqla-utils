@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import Generic
-from typing_extensions import TypeVar
+from typing_extensions import TypeVar  # defaults added in Python 3.13
 
 _V = TypeVar("_V", default=object)
 

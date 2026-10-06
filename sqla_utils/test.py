@@ -8,8 +8,7 @@ from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from tempfile import mkstemp
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
-from typing_extensions import Self
+from typing import TYPE_CHECKING, Any, ClassVar, Self, TypeVar
 
 import pytest
 from sqlalchemy import text

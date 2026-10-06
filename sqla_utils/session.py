@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from types import TracebackType
-from typing_extensions import Self
+from typing import Self
 
 from sqlalchemy.orm.session import Session as SASession
 
