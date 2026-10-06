@@ -1,9 +1,9 @@
 """Type definitions for sqla-utils."""
 
-from typing import Any, TypeAlias, TypeVar
+from typing import TypeAlias, TypeVarTuple
 
 from sqlalchemy.engine.row import Row
 
-_TP = TypeVar("_TP", bound=tuple[Any, ...])
+_Ts = TypeVarTuple("_Ts")
 
-RowType: TypeAlias = Row[_TP]
+RowType: TypeAlias = Row[*_Ts]

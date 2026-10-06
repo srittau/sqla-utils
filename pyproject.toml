@@ -92,5 +92,5 @@ format = { cmd = "ruff format sqla_utils test_sqla_utils", help = "Format the co
 check-formatting = { cmd = "ruff format --check sqla_utils test_sqla_utils", help = "Check code formatting without changing files" }
 
 [build-system]
-requires = ["uv_build>=0.11.15,<0.13"]
+requires = ["uv_build>=0.12.21,<0.13"]
 build-backend = "uv_build"
