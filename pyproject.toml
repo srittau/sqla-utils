@@ -17,7 +17,7 @@ requires-python = ">= 3.10"
 dependencies = ["SQLAlchemy ~= 2.0.0", "typing-extensions>=4.15.0"]
 
 [dependency-groups]
-dev = ["mypy~=2.3.1", "pytest>=9.0.0", "ruff~=0.15.13"]
+dev = ["mypy~=2.3.1", "poethepoet>=0.48.0", "pytest>=9.0.0", "ruff~=0.15.13"]
 
 [project.urls]
 Homepage = "https://github.com/srittau/sqla-utils"
@@ -82,6 +82,13 @@ warn_return_any = true
 warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
+
+[tool.poe.tasks]
+typecheck = { cmd = "mypy sqla_utils test_sqla_utils", help = "Type-check the code with mypy" }
+lint = { cmd = "ruff check sqla_utils test_sqla_utils", help = "Lint the code with ruff" }
+test = { cmd = "pytest", help = "Run the tests with pytest" }
+format = { cmd = "ruff format sqla_utils test_sqla_utils", help = "Format the code with ruff" }
+check-formatting = { cmd = "ruff format --check sqla_utils test_sqla_utils", help = "Check code formatting without changing files" }
 
 [build-system]
 requires = ["uv_build>=0.11.15,<0.13"]
