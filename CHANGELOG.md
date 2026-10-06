@@ -4,6 +4,12 @@ SQLA Tools adheres to [semantic versioning](https://semver.org/).
 
 ## Unreleased
 
+### Changed
+
+- Require SQLALchemy 2.1.
+- Update type annotations to match SQLAlchemy 2.1.
+- Move type-only SQLALchemy imports into `TYPE_CHECKING` blocks.
+
 ### Removed
 
 - Remove support for Python 3.10.

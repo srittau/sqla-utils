@@ -8,11 +8,11 @@ from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from tempfile import mkstemp
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, ClassVar, Self, TypeVar
+from typing import TYPE_CHECKING, Any, ClassVar, Self, TypeVarTuple
 
 import pytest
 from sqlalchemy import text
-from sqlalchemy.engine import Connection, Engine, Row, create_engine
+from sqlalchemy.engine import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import insert, select
 from sqlalchemy.sql.schema import MetaData, Table
@@ -21,9 +21,10 @@ from .builder import DatabaseBuilder
 from .session import Session
 
 if TYPE_CHECKING:
+    from sqlalchemy.engine import Connection, Engine, Row
     from sqlalchemy.sql._typing import _DMLColumnArgument
 
-_TP = TypeVar("_TP", bound="tuple[Any, ...]")
+_Ts = TypeVarTuple("_Ts")
 
 _MEMORY_DB_URL = "sqlite:///:memory:"
 
@@ -32,7 +33,7 @@ NOT_NULL = object()
 
 
 def assert_row_equals(
-    row: Row[Any], expected_values: Mapping[str, Any]
+    row: Row[*tuple[Any, ...]], expected_values: Mapping[str, Any]
 ) -> None:
     """Assert that a row contains expected values.
 
@@ -58,7 +59,7 @@ def assert_row_equals(
 
 
 def assert_one_row_equals(
-    rows: Iterable[Row[Any]], expected_values: Mapping[str, Any]
+    rows: Iterable[Row[*tuple[Any, ...]]], expected_values: Mapping[str, Any]
 ) -> None:
     """Assert that one of a list of rows contains the expected values.
 
@@ -68,7 +69,7 @@ def assert_one_row_equals(
     in expected_values. Those are ignored.
     """
 
-    def check_row(row: Row[Any]) -> bool:
+    def check_row(row: Row[*tuple[Any, ...]]) -> bool:
         try:
             assert_row_equals(row, expected_values)
         except AssertionError:
@@ -218,7 +219,7 @@ class DBFixture:
 
     def select_sql(
         self, query: str, args: Mapping[str, Any] | None = None
-    ) -> Sequence[Row[Any]]:
+    ) -> Sequence[Row[*tuple[Any, ...]]]:
         """Execute a SQL SELECT and return all rows."""
         with self.connection.begin():
             if args is None:
@@ -232,7 +233,7 @@ class DBFixture:
 
     def select_sql_one_row(
         self, query: str, args: Mapping[str, Any] | None = None
-    ) -> Row[Any]:
+    ) -> Row[*tuple[Any, ...]]:
         """Execute a SQL SELECT and return one row.
 
         Raise an AssertionError if the result has zero or more than one row.
@@ -241,14 +242,16 @@ class DBFixture:
         assert len(rows) == 1, f"got {len(rows)} rows, expected 1"
         return rows[0]
 
-    def select_all_rows(self, table_name: str) -> Sequence[Row[Any]]:
+    def select_all_rows(
+        self, table_name: str
+    ) -> Sequence[Row[*tuple[Any, ...]]]:
         """Return all rows from a table."""
         table = Table(table_name, self.__metadata__, autoload_with=self.engine)
         with self.connection.begin():
             res = self.connection.execute(select(table))
             return res.fetchall()
 
-    def select_only_row(self, table_name: str) -> Row[Any]:
+    def select_only_row(self, table_name: str) -> Row[*tuple[Any, ...]]:
         """Return the only row from a table.
 
         Raise an AssertionError if the table has zero or more than one row.
@@ -327,8 +330,8 @@ class DBFixture:
         )
 
         def find_one(
-            rs: Sequence[Row[_TP]], expected: Mapping[str, Any]
-        ) -> list[Row[_TP]]:
+            rs: Sequence[Row[*_Ts]], expected: Mapping[str, Any]
+        ) -> list[Row[*_Ts]]:
             __tracebackhide__ = True
             for i, tr in enumerate(rs):
                 try:

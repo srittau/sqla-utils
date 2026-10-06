@@ -1,26 +1,39 @@
 """Transaction management utilities for SQLAlchemy."""
 
-# ruff: noqa: ANN401 (FIXME)
-
 from __future__ import annotations
 
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, Self, TypeVar, overload
+from typing import TYPE_CHECKING, Any, Self, TypeVar, TypeVarTuple, overload
 
 from sqlalchemy import text
-from sqlalchemy.engine import Connection, Result
-from sqlalchemy.orm import Query, Session
-from sqlalchemy.schema import Table
-from sqlalchemy.sql import ColumnElement
 
 if TYPE_CHECKING:
+    from sqlalchemy.engine import Connection, Result
     from sqlalchemy.engine.interfaces import (
         _CoreAnyExecuteParams,
         _CoreSingleExecuteParams,
     )
-
+    from sqlalchemy.orm import Query, Session
+    from sqlalchemy.orm._typing import _EntityType
+    from sqlalchemy.orm.query import RowReturningQuery
+    from sqlalchemy.sql._typing import (
+        _ColumnsClauseArgument,
+        _TypedColumnClauseArgument,
+    )
+    from sqlalchemy.sql.base import Executable
+    from sqlalchemy.sql.roles import TypedColumnsClauseRole
+    from sqlalchemy.sql.selectable import TypedReturnsRows
 
 _T = TypeVar("_T")
+_T0 = TypeVar("_T0")
+_T1 = TypeVar("_T1")
+_T2 = TypeVar("_T2")
+_T3 = TypeVar("_T3")
+_T4 = TypeVar("_T4")
+_T5 = TypeVar("_T5")
+_T6 = TypeVar("_T6")
+_T7 = TypeVar("_T7")
+_Ts = TypeVarTuple("_Ts")
 
 
 class Transaction:
@@ -63,40 +76,126 @@ class Transaction:
             self.session.commit()
 
     @overload
-    def query(self, entities: Table, **kwargs: Any) -> Query[Any]: ...
-
-    @overload
-    def query(self, *entities: type[_T], **kwargs: Any) -> Query[_T]: ...
+    def query(self, _entity: _EntityType[_T]) -> Query[_T]: ...
 
     @overload
     def query(
-        self, entities: ColumnElement[_T], **kwargs: Any
-    ) -> Query[tuple[_T]]: ...
+        self, _colexpr: TypedColumnsClauseRole[_T]
+    ) -> RowReturningQuery[_T]: ...
+
+    # START OVERLOADED FUNCTIONS self.query RowReturningQuery 2-8
+
+    # code within this block is **programmatically,
+    # statically generated** by tools/generate_tuple_map_overloads.py
 
     @overload
     def query(
-        self, *entities: ColumnElement[_T], **kwargs: Any
-    ) -> Query[tuple[_T, ...]]: ...
+        self,
+        __ent0: _TypedColumnClauseArgument[_T0],
+        __ent1: _TypedColumnClauseArgument[_T1],
+        /,
+    ) -> RowReturningQuery[_T0, _T1]: ...
 
-    def query(self, *entities: Any, **kwargs: Any) -> Any:
+    @overload
+    def query(
+        self,
+        __ent0: _TypedColumnClauseArgument[_T0],
+        __ent1: _TypedColumnClauseArgument[_T1],
+        __ent2: _TypedColumnClauseArgument[_T2],
+        /,
+    ) -> RowReturningQuery[_T0, _T1, _T2]: ...
+
+    @overload
+    def query(
+        self,
+        __ent0: _TypedColumnClauseArgument[_T0],
+        __ent1: _TypedColumnClauseArgument[_T1],
+        __ent2: _TypedColumnClauseArgument[_T2],
+        __ent3: _TypedColumnClauseArgument[_T3],
+        /,
+    ) -> RowReturningQuery[_T0, _T1, _T2, _T3]: ...
+
+    @overload
+    def query(
+        self,
+        __ent0: _TypedColumnClauseArgument[_T0],
+        __ent1: _TypedColumnClauseArgument[_T1],
+        __ent2: _TypedColumnClauseArgument[_T2],
+        __ent3: _TypedColumnClauseArgument[_T3],
+        __ent4: _TypedColumnClauseArgument[_T4],
+        /,
+    ) -> RowReturningQuery[_T0, _T1, _T2, _T3, _T4]: ...
+
+    @overload
+    def query(
+        self,
+        __ent0: _TypedColumnClauseArgument[_T0],
+        __ent1: _TypedColumnClauseArgument[_T1],
+        __ent2: _TypedColumnClauseArgument[_T2],
+        __ent3: _TypedColumnClauseArgument[_T3],
+        __ent4: _TypedColumnClauseArgument[_T4],
+        __ent5: _TypedColumnClauseArgument[_T5],
+        /,
+    ) -> RowReturningQuery[_T0, _T1, _T2, _T3, _T4, _T5]: ...
+
+    @overload
+    def query(
+        self,
+        __ent0: _TypedColumnClauseArgument[_T0],
+        __ent1: _TypedColumnClauseArgument[_T1],
+        __ent2: _TypedColumnClauseArgument[_T2],
+        __ent3: _TypedColumnClauseArgument[_T3],
+        __ent4: _TypedColumnClauseArgument[_T4],
+        __ent5: _TypedColumnClauseArgument[_T5],
+        __ent6: _TypedColumnClauseArgument[_T6],
+        /,
+    ) -> RowReturningQuery[_T0, _T1, _T2, _T3, _T4, _T5, _T6]: ...
+
+    @overload
+    def query(
+        self,
+        __ent0: _TypedColumnClauseArgument[_T0],
+        __ent1: _TypedColumnClauseArgument[_T1],
+        __ent2: _TypedColumnClauseArgument[_T2],
+        __ent3: _TypedColumnClauseArgument[_T3],
+        __ent4: _TypedColumnClauseArgument[_T4],
+        __ent5: _TypedColumnClauseArgument[_T5],
+        __ent6: _TypedColumnClauseArgument[_T6],
+        __ent7: _TypedColumnClauseArgument[_T7],
+        /,
+        *entities: _ColumnsClauseArgument[Any],
+    ) -> RowReturningQuery[
+        _T0, _T1, _T2, _T3, _T4, _T5, _T6, _T7, *tuple[Any, ...]
+    ]: ...
+
+    @overload
+    def query(
+        self,
+        *entities: _ColumnsClauseArgument[Any],
+        **kwargs: Any,  # noqa: ANN401
+    ) -> Query[Any]: ...
+
+    def query(
+        self, *entities: _ColumnsClauseArgument[Any], **kwargs: Any
+    ) -> Query[Any]:
         """Execute a query against the database.
 
         Simple wrapper around Session.query().
         """
         return self.session.query(*entities, **kwargs)
 
-    def add(self, *instances: Any) -> None:
+    def add(self, *instances: Any) -> None:  # noqa: ANN401
         """Save one or more objects to the database."""
         self.session.add_all(instances)
         self.flush(*instances)
 
-    def delete(self, *instances: Any) -> None:
+    def delete(self, *instances: Any) -> None:  # noqa: ANN401
         """Mark one or more instances as deleted."""
         for obj in instances:
             self.session.delete(obj)
         self.flush(*instances)
 
-    def flush(self, *objects: Any) -> None:
+    def flush(self, *objects: Any) -> None:  # noqa: ANN401
         """Flush object changes to the database.
 
         As opposed to Session.flush() this takes the objects
@@ -108,7 +207,7 @@ class Transaction:
         else:
             self.session.flush(objects)
 
-    def refresh(self, *instances: Any) -> None:
+    def refresh(self, *instances: Any) -> None:  # noqa: ANN401
         """Refresh instances from the database.
 
         Wrapper around Session.refresh.
@@ -125,19 +224,46 @@ class Transaction:
         """
         self.session.expire_all()
 
+    @overload
+    def execute(
+        self,
+        query: TypedReturnsRows[*_Ts],
+        args: _CoreAnyExecuteParams | None = None,
+    ) -> Result[*_Ts]: ...
+
+    @overload
+    def execute(
+        self,
+        query: Executable | str,
+        args: _CoreAnyExecuteParams | None = None,
+    ) -> Result[*tuple[Any, ...]]: ...
+
     def execute(
         self,
         query: Any,
         args: _CoreAnyExecuteParams | None = None,
-    ) -> Result[tuple[Any, ...]]:
+    ) -> Result[*tuple[Any, ...]]:
         """Execute a query against the database.
 
         Wrapper around Session.execute().
         """
         if isinstance(query, str):
             query = text(query)
-        result: Result[tuple[Any, ...]] = self.session.execute(query, args)
-        return result
+        return self.session.execute(query, args)
+
+    @overload
+    def scalar(
+        self,
+        query: TypedReturnsRows[_T],
+        params: _CoreSingleExecuteParams | None = None,
+    ) -> _T | None: ...
+
+    @overload
+    def scalar(
+        self,
+        query: Executable | str,
+        params: _CoreSingleExecuteParams | None = None,
+    ) -> Any: ...  # noqa: ANN401
 
     def scalar(
         self,
