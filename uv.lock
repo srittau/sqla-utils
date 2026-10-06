@@ -7,7 +7,7 @@ resolution-markers = [
 ]
 
 [options]
-exclude-newer = "2026-10-01T11:37:56.814551124Z"
+exclude-newer = "2026-10-01T12:37:12.670791294Z"
 exclude-newer-span = "P5D"
 
 [[package]]
@@ -433,7 +433,7 @@ wheels = [
 
 [[package]]
 name = "sqla-utils"
-version = "0.8.2.dev0"
+version = "0.9.1.dev0"
 source = { editable = "." }
 dependencies = [
     { name = "sqlalchemy" },
