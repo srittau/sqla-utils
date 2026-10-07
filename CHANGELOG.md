@@ -4,6 +4,11 @@ SQLA Tools adheres to [semantic versioning](https://semver.org/).
 
 ## Unreleased
 
+### Fixed
+
+- Fix SQLAlchemy deprecation warning when calling `Transaction.add()` or
+  `Transaction.delete()`.
+
 ## [0.9.0] – 2026-10-06
 
 ### Changed

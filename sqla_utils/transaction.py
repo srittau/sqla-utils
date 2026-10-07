@@ -187,13 +187,13 @@ class Transaction:
     def add(self, *instances: Any) -> None:  # noqa: ANN401
         """Save one or more objects to the database."""
         self.session.add_all(instances)
-        self.flush(*instances)
+        self.flush()
 
     def delete(self, *instances: Any) -> None:  # noqa: ANN401
         """Mark one or more instances as deleted."""
         for obj in instances:
             self.session.delete(obj)
-        self.flush(*instances)
+        self.flush()
 
     def flush(self, *objects: Any) -> None:  # noqa: ANN401
         """Flush object changes to the database.
