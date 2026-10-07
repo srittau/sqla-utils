@@ -433,7 +433,7 @@ wheels = [
 
 [[package]]
 name = "sqla-utils"
-version = "0.9.1"
+version = "0.9.2.dev0"
 source = { editable = "." }
 dependencies = [
     { name = "sqlalchemy" },
