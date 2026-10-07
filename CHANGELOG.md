@@ -4,6 +4,11 @@ SQLA Tools adheres to [semantic versioning](https://semver.org/).
 
 ## Unreleased
 
+### Changed
+
+- Deprecate calling `Transaction.flush()` with arguments to match SQLAlchemy's
+  behavior.
+
 ### Fixed
 
 - Fix SQLAlchemy deprecation warning when calling `Transaction.add()` or

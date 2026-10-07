@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from types import TracebackType
 from typing import TYPE_CHECKING, Any, Self, TypeVar, TypeVarTuple, overload
+from typing_extensions import deprecated
 
 from sqlalchemy import text
 
@@ -195,7 +196,12 @@ class Transaction:
             self.session.delete(obj)
         self.flush()
 
-    def flush(self, *objects: Any) -> None:  # noqa: ANN401
+    @overload
+    def flush(self) -> None: ...
+    @overload
+    @deprecated("Calling flush() with arguments is deprecated.")
+    def flush(self, object1: Any, /, *objects: Any) -> None: ...  # type: ignore[misc]  # noqa: ANN401
+    def flush(self, *objects: Any) -> None:
         """Flush object changes to the database.
 
         As opposed to Session.flush() this takes the objects
