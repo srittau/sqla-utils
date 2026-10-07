@@ -7,7 +7,7 @@ resolution-markers = [
 ]
 
 [options]
-exclude-newer = "2026-10-01T12:37:12.670791294Z"
+exclude-newer = "0001-01-01T00:00:00Z" # This has no effect and is included for backwards compatibility when using relative exclude-newer values.
 exclude-newer-span = "P5D"
 
 [[package]]
@@ -433,7 +433,7 @@ wheels = [
 
 [[package]]
 name = "sqla-utils"
-version = "0.9.1.dev0"
+version = "0.9.1"
 source = { editable = "." }
 dependencies = [
     { name = "sqlalchemy" },
